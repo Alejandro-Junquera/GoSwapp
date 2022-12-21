@@ -6,19 +6,23 @@ class InicioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      color: Color.fromARGB(255, 231, 225, 231),
       child: FractionallySizedBox(
-        widthFactor: 0.98,
-        heightFactor: 0.98,
+        widthFactor: 0.99,
+        heightFactor: 0.99,
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 1, 63, 91),
+            color: Colors.white30,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(children: [
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.70,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 123, 174, 181),
+                borderRadius: BorderRadius.circular(50),
+              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(300),
                 child: Image(
