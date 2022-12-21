@@ -6,7 +6,7 @@ class InicioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromARGB(255, 231, 225, 231),
+      color: Color.fromARGB(255, 181, 166, 181),
       child: FractionallySizedBox(
         widthFactor: 0.99,
         heightFactor: 0.99,
@@ -20,14 +20,14 @@ class InicioScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.70,
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 123, 174, 181),
-                borderRadius: BorderRadius.circular(50),
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(300),
+                borderRadius: BorderRadius.circular(70),
                 child: Image(
                     fit: BoxFit.fill,
-                    image: AssetImage("assets/images/trueque.png")),
+                    image: AssetImage("assets/images/trueque2.png")),
               ),
             ),
             SizedBox(height: 30),
