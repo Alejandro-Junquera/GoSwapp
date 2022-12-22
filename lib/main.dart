@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
           'login': (_) => LoginScreen(),
           //'register': (_) => RegisterScreen(),
         },
-        theme: ThemeData.light()
-            .copyWith(scaffoldBackgroundColor: Colors.blueGrey[600]));
+        theme: ThemeData.light().copyWith(scaffoldBackgroundColor: Colors.red));
   }
 }

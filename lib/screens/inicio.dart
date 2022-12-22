@@ -40,35 +40,41 @@ class InicioScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(300),
-                            child: Image(
+                            child: const Image(
                                 image:
                                     AssetImage("assets/images/trueque2.png")),
                           ),
+                          const SizedBox(
+                            height: 50,
+                          ),
                           SizedBox(
-                            width: 250.0,
+                            width: MediaQuery.of(context).size.width,
                             child: DefaultTextStyle(
                               style: const TextStyle(
                                 fontSize: 30.0,
                                 fontFamily: 'popin',
                               ),
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.width * 0.10),
+                              child: Center(
                                 child: AnimatedTextKit(
                                     isRepeatingAnimation: true,
                                     animatedTexts: [
                                       TyperAnimatedText(
                                           'Comparte\nAprende\nRelacionate',
-                                          speed: Duration(milliseconds: 150)),
+                                          speed:
+                                              const Duration(milliseconds: 150),
+                                          textStyle:
+                                              const TextStyle(fontSize: 20)),
                                       TyperAnimatedText('  Go Swap',
-                                          speed: Duration(milliseconds: 10),
-                                          textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold)),
+                                          speed:
+                                              const Duration(milliseconds: 10),
+                                          textStyle: const TextStyle(
+                                              fontSize: 40,
+                                              fontWeight: FontWeight.w900)),
                                     ]),
                               ),
                             ),
