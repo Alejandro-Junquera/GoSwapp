@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/inicio.dart';
+import 'screens/login.dart';
 
 void main() => runApp(AppState());
 
@@ -30,10 +31,10 @@ class MyApp extends StatelessWidget {
         initialRoute: 'inicio',
         routes: {
           'inicio': (_) => InicioScreen(),
-          //'login': (_) => LoginScreen(),
+          'login': (_) => LoginScreen(),
           //'register': (_) => RegisterScreen(),
         },
         theme: ThemeData.light()
-            .copyWith(scaffoldBackgroundColor: Colors.grey[300]));
+            .copyWith(scaffoldBackgroundColor: Colors.blueGrey[600]));
   }
 }
