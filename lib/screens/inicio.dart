@@ -10,6 +10,8 @@ class InicioScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Inicio"),
+        backgroundColor: Colors.blueGrey[500],
+        shadowColor: Colors.amber,
       ),
       body: Center(
         child: FutureBuilder(
