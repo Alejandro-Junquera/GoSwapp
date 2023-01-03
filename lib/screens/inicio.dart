@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:animate_do/animate_do.dart';
 
 class InicioScreen extends StatelessWidget {
   const InicioScreen({super.key});
@@ -29,7 +29,7 @@ class InicioScreen extends StatelessWidget {
             }
             return FutureBuilder(
               future: Future.delayed(
-                const Duration(seconds: 6),
+                const Duration(milliseconds: 4300),
                 () {
                   Navigator.of(context).pushReplacementNamed("login");
                 },
@@ -54,30 +54,47 @@ class InicioScreen extends StatelessWidget {
                           const SizedBox(
                             height: 50,
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: DefaultTextStyle(
-                              style: const TextStyle(
-                                fontSize: 30.0,
-                                fontFamily: 'popin',
-                              ),
-                              child: Center(
-                                child: AnimatedTextKit(
-                                    isRepeatingAnimation: true,
-                                    animatedTexts: [
-                                      TyperAnimatedText(
-                                          'Comparte\nAprende\nRelacionate',
-                                          speed:
-                                              const Duration(milliseconds: 150),
-                                          textStyle:
-                                              const TextStyle(fontSize: 20)),
-                                      TyperAnimatedText('  Go Swap',
-                                          speed:
-                                              const Duration(milliseconds: 10),
-                                          textStyle: const TextStyle(
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.w900)),
-                                    ]),
+                          ZoomIn(
+                              delay: const Duration(milliseconds: 3000),
+                              child: const Text(
+                                'GO SWAP',
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 50,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                          ZoomOut(
+                            delay: const Duration(milliseconds: 3000),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: DefaultTextStyle(
+                                style: const TextStyle(
+                                  fontSize: 30.0,
+                                  fontFamily: 'popin',
+                                ),
+                                child: Column(
+                                  children: [
+                                    FadeInLeft(
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                        delay:
+                                            const Duration(milliseconds: 500),
+                                        child: const Text('Comparte')),
+                                    FadeInRight(
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                        delay:
+                                            const Duration(milliseconds: 1000),
+                                        child: const Text('Aprende')),
+                                    FadeInLeft(
+                                        duration:
+                                            const Duration(milliseconds: 1500),
+                                        delay:
+                                            const Duration(milliseconds: 1500),
+                                        child: const Text('Relacionate')),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

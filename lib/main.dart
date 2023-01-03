@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
+import 'package:flutter_aplicacion_ganadora/screens/ofertas_prof.dart';
+import 'package:flutter_aplicacion_ganadora/screens/screens.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/inicio.dart';
-import 'screens/login.dart';
-
-void main() => runApp(AppState());
+void main() => runApp(const AppState());
 
 class AppState extends StatelessWidget {
   const AppState({super.key});
@@ -16,7 +16,7 @@ class AppState extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MyApp();
+    return const MyApp();
   }
 }
 
@@ -25,15 +25,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'GoSwap',
-        initialRoute: 'inicio',
-        routes: {
-          'inicio': (_) => InicioScreen(),
-          'login': (_) => LoginScreen(),
-          //'register': (_) => RegisterScreen(),
-        },
-        theme: ThemeData.light().copyWith(scaffoldBackgroundColor: Colors.red));
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProfProvider(),
+        )
+      ],
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'GoSwap',
+          initialRoute: 'inicio',
+          routes: {
+            'inicio': (_) => const InicioScreen(),
+            'login': (_) => const LoginScreen(),
+            'registro': (_) => const RegistroScreen(),
+            'initProf': (_) => const OfertasProfScreen(),
+            'ofertaconfig': (_) => const OfertaConfigScreen(),
+            //'register': (_) => RegisterScreen(),
+          },
+          theme: ThemeData.light()
+              .copyWith(scaffoldBackgroundColor: Colors.grey[200])),
+    );
   }
 }
