@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 import 'package:flutter_aplicacion_ganadora/src/pages/pages.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 
 import '../ui/input_decorations.dart';
 
@@ -58,9 +60,9 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final loginForm = Provider.of<LoginFormProvider>(context);
+    final loginForm = Provider.of<LoginFormProvider>(context);
     return Form(
-      key: null, //loginForm.formKey,
+      key: loginForm.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
@@ -74,7 +76,7 @@ class _LoginForm extends StatelessWidget {
                   labelText: 'Email',
                   prefixIcon: Icons.alternate_email_sharp,
                 ),
-                onChanged: (value) {}, //(value) => loginForm.email = value,
+                onChanged: (value) => loginForm.email = value,
                 validator: (value) {
                   String pattern =
                       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -95,7 +97,7 @@ class _LoginForm extends StatelessWidget {
                     hinText: '*******',
                     labelText: 'Contraseña',
                     prefixIcon: Icons.lock_clock_outlined),
-                onChanged: (value) {}, //(value) => loginForm.password = value,
+                onChanged: (value) => loginForm.contrasenia = value,
                 validator: (value) {
                   return (value != null && value.length >= 6)
                       ? null
@@ -112,7 +114,11 @@ class _LoginForm extends StatelessWidget {
               elevation: 0,
               color: Colors.blueGrey[600],
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('initProf');
+                if (loginForm.email == 'profesor@gmail.com') {
+                  Navigator.of(context).pushReplacementNamed('initProf');
+                } else if (loginForm.email == 'cliente@gmail.com') {
+                  Navigator.of(context).pushReplacementNamed('cliente');
+                }
               }, //loginForm.isLoading
               //     ? null
               //     : () async {

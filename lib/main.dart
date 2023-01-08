@@ -29,6 +29,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => ProfProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LoginFormProvider(),
         )
       ],
       child: MaterialApp(
@@ -41,6 +44,9 @@ class MyApp extends StatelessWidget {
             'registro': (_) => const RegistroScreen(),
             'initProf': (_) => const OfertasProfScreen(),
             'ofertaconfig': (_) => const OfertaConfigScreen(),
+            'cliente': (_) => const ClienteScreen(),
+            'nuevaOfertaCliente': (_) => const NuevaOfertaClienteScreen(),
+
             //'register': (_) => RegisterScreen(),
           },
           theme: ThemeData.light()
