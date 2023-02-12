@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 import 'package:flutter_aplicacion_ganadora/screens/ofertas_prof.dart';
 import 'package:flutter_aplicacion_ganadora/screens/screens.dart';
+import 'package:flutter_aplicacion_ganadora/services/auth_service.dart';
+import 'package:flutter_aplicacion_ganadora/services/ciclos_service.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(const AppState());
@@ -32,6 +34,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => LoginFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RegisterFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AuthService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CiclosService(),
         )
       ],
       child: MaterialApp(

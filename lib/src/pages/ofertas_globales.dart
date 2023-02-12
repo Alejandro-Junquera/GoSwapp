@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: depend_on_referenced_packages
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class OfertasGlobalesPage extends StatefulWidget {
@@ -10,6 +11,7 @@ class OfertasGlobalesPage extends StatefulWidget {
 }
 
 class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
+  
   final listaOfertas = [
     _Oferta('Cambio Enchufe', 'NECESITO CAMBIAR UN ENCHUFE', 'enchufe.jpg'),
     _Oferta('Pintar paredes', 'nueva mano de pintura', 'enchufe.jpg'),

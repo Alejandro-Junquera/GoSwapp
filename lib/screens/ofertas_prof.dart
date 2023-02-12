@@ -4,6 +4,8 @@ import 'package:flutter_aplicacion_ganadora/src/pages/pages.dart';
 import 'package:flutter_aplicacion_ganadora/src/widgets/bottomnavigationbar_personalizado.dart';
 import 'package:provider/provider.dart';
 
+import '../services/services.dart';
+
 class OfertasProfScreen extends StatelessWidget {
   const OfertasProfScreen({super.key});
 
@@ -11,9 +13,20 @@ class OfertasProfScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Center(
-        child: Text('Menú Profesor'),
-      )),
+        title: const Center(
+          child: Text('Menú Profesor'),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () async {
+            final logOutService =
+                Provider.of<AuthService>(context, listen: false);
+            await logOutService.logout();
+            // ignore: use_build_context_synchronously
+            Navigator.pushReplacementNamed(context, 'login');
+          },
+        ),
+      ),
       body: const _Ofertas(),
       bottomNavigationBar: const BottomNavigationBarPersonalizado(),
     );

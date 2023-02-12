@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 import 'package:flutter_aplicacion_ganadora/src/pages/pages.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 
+import '../services/services.dart';
 import '../ui/input_decorations.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -113,18 +115,28 @@ class _LoginForm extends StatelessWidget {
               disabledColor: Colors.grey,
               elevation: 0,
               color: Colors.blueGrey[600],
-              onPressed: () {
-                if (loginForm.email == 'profesor@gmail.com') {
-                  Navigator.of(context).pushReplacementNamed('initProf');
-                } else if (loginForm.email == 'cliente@gmail.com') {
-                  Navigator.of(context).pushReplacementNamed('cliente');
-                }
-              }, //loginForm.isLoading
-              //     ? null
-              //     : () async {
-              //         FocusScope.of(context).unfocus();
-
-              //       },
+              onPressed: loginForm.isLoading
+                  ? null
+                  : () async {
+                      FocusScope.of(context).unfocus();
+                      final loginService =
+                          Provider.of<AuthService>(context, listen: false);
+                      if (!loginForm.isValidForm()) return;
+                      final String? mensaje = await loginService.login(
+                          loginForm.email, loginForm.contrasenia);
+                      if (mensaje == 'No estás autorizado') {
+                        // ignore: use_build_context_synchronously
+                        customToast(mensaje!, context);
+                      } else if (mensaje == 'admin') {
+                      } else if (mensaje == 'C') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pushReplacementNamed('cliente');
+                      } else if (mensaje == 'U') {
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pushReplacementNamed('initProf');
+                      }
+                    },
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
@@ -138,6 +150,28 @@ class _LoginForm extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void customToast(String message, BuildContext context) {
+    showToast(
+      message,
+      textStyle: const TextStyle(
+        fontSize: 14,
+        wordSpacing: 0.1,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      textPadding: const EdgeInsets.all(23),
+      fullWidth: true,
+      toastHorizontalMargin: 25,
+      borderRadius: BorderRadius.circular(15),
+      backgroundColor: Colors.blueGrey[500],
+      alignment: Alignment.bottomCenter,
+      position: StyledToastPosition.top,
+      duration: const Duration(seconds: 3),
+      animation: StyledToastAnimation.slideFromTop,
+      context: context,
     );
   }
 }
