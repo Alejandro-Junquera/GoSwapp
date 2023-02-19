@@ -1,7 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'package:flutter/material.dart';
+// ignore: unnecessary_import
 import 'package:flutter_aplicacion_ganadora/services/auth_service.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:flutter_aplicacion_ganadora/src/pages/pages.dart';
+// ignore: depend_on_referenced_packages
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import '../models/models.dart';

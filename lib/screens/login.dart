@@ -119,7 +119,8 @@ class _LoginForm extends StatelessWidget {
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus();
-                      final loginService =
+                      Navigator.of(context).pushReplacementNamed('alumno');
+                      /*final loginService =
                           Provider.of<AuthService>(context, listen: false);
                       if (!loginForm.isValidForm()) return;
                       final String? mensaje = await loginService.login(
@@ -128,6 +129,8 @@ class _LoginForm extends StatelessWidget {
                         // ignore: use_build_context_synchronously
                         customToast(mensaje!, context);
                       } else if (mensaje == 'admin') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pushReplacementNamed('admin');
                       } else if (mensaje == 'C') {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacementNamed('cliente');
@@ -135,7 +138,7 @@ class _LoginForm extends StatelessWidget {
                       } else {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacementNamed('initProf');
-                      }
+                      }*/
                     },
               child: Container(
                 padding:

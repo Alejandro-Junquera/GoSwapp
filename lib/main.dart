@@ -1,11 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
-import 'package:flutter_aplicacion_ganadora/screens/ofertas_prof.dart';
 import 'package:flutter_aplicacion_ganadora/screens/screens.dart';
-import 'package:flutter_aplicacion_ganadora/services/auth_service.dart';
-import 'package:flutter_aplicacion_ganadora/services/ciclos_service.dart';
-import 'package:provider/provider.dart';
+import 'services/services.dart';
 
 void main() => runApp(const AppState());
 
@@ -33,6 +32,9 @@ class MyApp extends StatelessWidget {
           create: (_) => ProfProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => AdminProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => LoginFormProvider(),
         ),
         ChangeNotifierProvider(
@@ -43,6 +45,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => CiclosService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NuevoProfProvider(),
         )
       ],
       child: MaterialApp(
@@ -57,6 +62,9 @@ class MyApp extends StatelessWidget {
             'ofertaconfig': (_) => const OfertaConfigScreen(),
             'cliente': (_) => const ClienteScreen(),
             'nuevaOfertaCliente': (_) => const NuevaOfertaClienteScreen(),
+            'admin': (_) => const OfertasAdminScreen(),
+            'crearProfesor': (_) => const CrearProfresorScreen(),
+            'alumno': (_) => const AlumnoScreen(),
 
             //'register': (_) => RegisterScreen(),
           },
