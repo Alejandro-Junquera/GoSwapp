@@ -15,17 +15,19 @@ class OfertasAdminPage extends StatefulWidget {
 class _OfertasAdminPageState extends State<OfertasAdminPage> {
   final listaOfertas = [
     _Oferta(
-        titulo: 'Cambio enchufe',
-        descripcion: 'Necesito cambiar con urgencia un enchufe en mi casa',
+        titulo: 'Ordenador lento',
+        descripcion:
+            'Necesito ayuda, desde hace unos dias mi ordenador va muy lento, quizas tenga un virus',
         imagen: 'enchufe.jpg'),
     _Oferta(
-        titulo: 'Pintar paredes',
-        descripcion: 'nueva mano de pintura',
+        titulo: 'Cambio de cableado electrico',
+        descripcion:
+            'Buenos dias necesito ayuda para cambiar el cableado electrico de una habitación debido a la humedad',
         imagen: 'enchufe.jpg'),
   ];
   final listaCiclos = [
     _Ciclo(1, 'DAM'),
-    _Ciclo(2, 'DAW'),
+    _Ciclo(2, 'IEA'),
   ];
   @override
   Widget build(BuildContext context) {

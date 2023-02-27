@@ -10,10 +10,9 @@ class OfertaConfigScreen extends StatefulWidget {
 
 class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
   final listaAlumnos = [
-    _Alumno("ALBERTO", "DAM", false),
-    _Alumno("ALEJANDRO", "DAM", false),
-    _Alumno("JAVIER", "DAW", true),
-    _Alumno("RAUL", "ASIR", true),
+    _Alumno("ALBERTO", "IEA", false),
+    _Alumno("ALEJANDRO", "IEA", false),
+    _Alumno("JAVIER", "IEA", true),
   ];
   List<bool> isSelected = [false, false];
 
@@ -121,7 +120,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
                               child: Text(
-                                "Deserunt nisi sit est incididunt sunt proident officia ex dolore. Veniam pariatur commodo velit enim elit duis cillum labore id deserunt mollit adipisicing duis cupidatat. Est consequat Lorem do elit occaecat ut officia do excepteur aute nostrud quis. Sunt qui aliqua ad aliqua laborum cupidatat et.",
+                                "Ha finalizado la tarea en muy poco tiempo y en unas condiciones muy aceptables para ser un alumno.",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -133,7 +132,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                             itemBuilder: (context, _) => const Icon(
                                 Icons.heart_broken,
                                 color: Colors.red),
-                            rating: 1, //TODO: NUMERO CAMBIABLE
+                            rating: 4.5, //TODO: NUMERO CAMBIABLE
                           ),
                         ]),
                       ),
@@ -194,14 +193,16 @@ class _CardPersonalizada extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    'assets/images/enchufe.jpg',
+                    'assets/images/enchufeRoto.jpg',
                     fit: BoxFit.cover,
+                    width: 150,
+                    height: 150,
                     scale: 5,
                   ),
                   Column(
                     children: [
                       Text(
-                        "Arreglar un enchufe",
+                        "Cambiar interruptor",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold),
@@ -215,7 +216,7 @@ class _CardPersonalizada extends StatelessWidget {
                         child: const SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Text(
-                            "Deserunt nisi sit est incididunt sunt proident officia ex dolore. Veniam pariatur commodo velit enim elit duis cillum labore id deserunt mollit adipisicing duis cupidatat. Est consequat Lorem do elit occaecat ut officia do excepteur aute nostrud quis. Sunt qui aliqua ad aliqua laborum cupidatat et.",
+                            "Modificar interruptor de corriente en mal estado debido a un golpe. Está roto",
                             maxLines: 50,
                             style: TextStyle(
                               fontSize: 16,

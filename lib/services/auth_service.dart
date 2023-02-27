@@ -1,10 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 
 class AuthService extends ChangeNotifier {
-  final String _baseUrl = 'localhost:8000';
+  final String _baseUrl = 'goswapp.allsites.es';
   final storage = const FlutterSecureStorage();
 
   Future<String?> register(String name, String surname, String email,
@@ -38,7 +39,7 @@ class AuthService extends ChangeNotifier {
       'email': email,
       'password': password,
     };
-    final url = Uri.http(_baseUrl, '/api/login', {});
+    final url = Uri.http(_baseUrl, '/public/api/login', {});
 
     final resp = await http.post(url,
         headers: {
@@ -58,6 +59,14 @@ class AuthService extends ChangeNotifier {
     } else {
       return decodedResp['error'];
     }
+  }
+
+  readToken() async {
+    return await storage.read(key: 'token') ?? '';
+  }
+
+  readId() async {
+    return await storage.read(key: 'userId') ?? '';
   }
 
   Future logout() async {

@@ -1,3 +1,4 @@
+export 'package:flutter_aplicacion_ganadora/screens/info_oferta_cliente.dart';
 export 'package:flutter_aplicacion_ganadora/screens/alumno.dart';
 export 'package:flutter_aplicacion_ganadora/screens/ofertas_prof.dart';
 export 'package:flutter_aplicacion_ganadora/screens/crear_profesor.dart';

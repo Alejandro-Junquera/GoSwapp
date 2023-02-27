@@ -101,9 +101,9 @@ class _LoginForm extends StatelessWidget {
                     prefixIcon: Icons.lock_clock_outlined),
                 onChanged: (value) => loginForm.contrasenia = value,
                 validator: (value) {
-                  return (value != null && value.length >= 6)
+                  return (value != null && value.length >= 4)
                       ? null
-                      : 'La contraseña tiene que tener mas de 6 caracteres';
+                      : 'La contraseña tiene que tener mas de 4 caracteres';
                 }),
           ),
           const SizedBox(height: 30),
@@ -119,8 +119,7 @@ class _LoginForm extends StatelessWidget {
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus();
-                      Navigator.of(context).pushReplacementNamed('alumno');
-                      /*final loginService =
+                      final loginService =
                           Provider.of<AuthService>(context, listen: false);
                       if (!loginForm.isValidForm()) return;
                       final String? mensaje = await loginService.login(
@@ -131,14 +130,16 @@ class _LoginForm extends StatelessWidget {
                       } else if (mensaje == 'admin') {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacementNamed('admin');
-                      } else if (mensaje == 'C') {
+                      } else if (mensaje == 'user') {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacementNamed('cliente');
-                      } else if (mensaje == 'U') {
+                      } else if (mensaje == 'student') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pushReplacementNamed('alumno');
                       } else {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacementNamed('initProf');
-                      }*/
+                      }
                     },
               child: Container(
                 padding:

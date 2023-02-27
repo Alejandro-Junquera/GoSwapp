@@ -1,8 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:flutter_aplicacion_ganadora/models/models.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-
-import 'dart:math' as math;
-
 import 'package:flutter/rendering.dart';
+
+import '../services/services.dart';
 
 class ClienteScreen extends StatefulWidget {
   const ClienteScreen({super.key});
@@ -12,12 +15,22 @@ class ClienteScreen extends StatefulWidget {
 }
 
 class _ClienteScreenState extends State<ClienteScreen> {
+  List<TareasDataUser> misTareas = [];
+  obtenerTareasUsuario() async {
+    final userService = Provider.of<UserService>(context, listen: false);
+    await userService.obtenerTareasUsuario();
+    setState(() {
+      misTareas = userService.misTareas;
+    });
+  }
+
   ScrollController scrollController = ScrollController();
   double topContainer = 0;
   var _isVisible = true;
   @override
   void initState() {
     super.initState();
+    obtenerTareasUsuario();
     _isVisible = true;
     scrollController.addListener(() {
       //control Boton flotante
@@ -44,38 +57,6 @@ class _ClienteScreenState extends State<ClienteScreen> {
     });
   }
 
-  final listaOfertas = [
-    _Oferta(
-        'Arreglo de enchufe',
-        'eeeeeeeeeeeeeeeeeeeeee eeeeeeeeee  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-        'enchufe.jpg',
-        'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-    _Oferta('Arreglo de enchufe', 'se me ha roto el echufe necesito reparacion',
-        'enchufe.jpg', 'electronica'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,9 +65,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
         height: MediaQuery.of(context).size.height,
         child: ListView.builder(
           controller: scrollController,
-          itemCount: listaOfertas.length,
+          itemCount: misTareas.length,
           itemBuilder: (context, index) {
-            final oferta = listaOfertas[index];
+            final tarea = misTareas[index];
             double angle = index + 1 - topContainer;
             if (angle < 0) {
               angle = 0;
@@ -117,14 +98,24 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                   ),
                                 ],
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/enchufe.jpg',
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  height: 250,
-                                  fit: BoxFit.cover,
+                              child: GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                    context, "infoOfertaCliente",
+                                    arguments: tarea),
+                                child: Hero(
+                                  tag: tarea.id!,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.network(
+                                      tarea.imagen == ''
+                                          ? 'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg'
+                                          : 'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg',
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      height: 250,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
                             )),
@@ -142,7 +133,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
-                                    child: Text(oferta.titulo,
+                                    child: Text(tarea.title.toString(),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: const TextStyle(
@@ -155,14 +146,14 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                     child: SizedBox(
                                       height: 120,
                                       child: Text(
-                                        oferta.descripcion,
+                                        tarea.description.toString(),
                                         maxLines: 7,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
-                                  Text('Estado : Finalizado')
+                                  const Text('Falta fecha finalizacion')
                                 ],
                               ),
                             ),
@@ -195,5 +186,7 @@ class _Oferta {
   String descripcion;
   String imagen;
   String categoria;
-  _Oferta(this.titulo, this.descripcion, this.imagen, this.categoria);
+  String estado;
+  _Oferta(
+      this.titulo, this.descripcion, this.imagen, this.categoria, this.estado);
 }

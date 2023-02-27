@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 
 class OfertasPublicadasPage extends StatelessWidget {
   final listaOfertas = [
-    _Oferta('Cambio Enchufe', 'NECESITO CAMBIAR UN ENCHUFE', 'enchufe.jpg'),
-    _Oferta('Pintar paredes', 'nueva mano de pintura', 'enchufe.jpg'),
-    _Oferta('Cambio Enchufe', 'NECESITO CAMBIAR UN ENCHUFE', 'enchufe.jpg'),
-    _Oferta('Pintar paredes', 'nueva mano de pintura', 'enchufe.jpg')
+    _Oferta(
+        'Cablear red',
+        'Cablear una habitación con cable de red desde la habitación donde se encuentra el router',
+        'enchufe.jpg',
+        2),
+    _Oferta(
+        'Cambiar interruptor',
+        'Modificar interruptor de corriente en mal estado debido a un golpe. Está roto',
+        'enchufe.jpg',
+        3),
+    _Oferta(
+        'Ordenador lento',
+        'Necesito ayuda, desde hace unos dias mi ordenador va muy lento, quizas tenga un virus',
+        'enchufe.jpg',
+        1),
   ];
 
   OfertasPublicadasPage({super.key});
@@ -31,7 +42,7 @@ class OfertasPublicadasPage extends StatelessWidget {
                         children: [
                           Text(oferta.titulo),
                           const Spacer(),
-                          Text("5"),
+                          Text(oferta.intesesados.toString()),
                           const Icon(Icons.person_outline)
                         ],
                       ),
@@ -50,5 +61,6 @@ class _Oferta {
   final String titulo;
   final String descripcion;
   final String imagen;
-  _Oferta(this.titulo, this.descripcion, this.imagen);
+  final int intesesados;
+  _Oferta(this.titulo, this.descripcion, this.imagen, this.intesesados);
 }

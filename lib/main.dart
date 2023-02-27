@@ -48,6 +48,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => NuevoProfProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NuevaTareaFormProvider(),
         )
       ],
       child: MaterialApp(
@@ -65,6 +71,7 @@ class MyApp extends StatelessWidget {
             'admin': (_) => const OfertasAdminScreen(),
             'crearProfesor': (_) => const CrearProfresorScreen(),
             'alumno': (_) => const AlumnoScreen(),
+            'infoOfertaCliente': (_) => const InfoOfertaClienteScreen(),
 
             //'register': (_) => RegisterScreen(),
           },

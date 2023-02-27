@@ -14,8 +14,8 @@ class GestionarProfesoresPage extends StatefulWidget {
 
 class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
   final listaProfesores = [
-    _Profesor(1, 'Pepe', 'Martinez', 'DAM'),
-    _Profesor(2, 'Felipe', 'Juanes', 'DAW'),
+    _Profesor(1, 'Felix', 'Reyes Fernández', 'DAM'),
+    _Profesor(2, 'Cristina', 'Durán Martínez', 'Teleco'),
   ];
   @override
   Widget build(BuildContext context) {

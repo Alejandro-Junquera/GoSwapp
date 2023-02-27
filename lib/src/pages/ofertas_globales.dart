@@ -11,12 +11,15 @@ class OfertasGlobalesPage extends StatefulWidget {
 }
 
 class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
-  
   final listaOfertas = [
-    _Oferta('Cambio Enchufe', 'NECESITO CAMBIAR UN ENCHUFE', 'enchufe.jpg'),
-    _Oferta('Pintar paredes', 'nueva mano de pintura', 'enchufe.jpg'),
-    _Oferta('Cambio Enchufe', 'NECESITO CAMBIAR UN ENCHUFE', 'enchufe.jpg'),
-    _Oferta('Pintar paredes', 'nueva mano de pintura', 'enchufe.jpg')
+    _Oferta(
+        'Ordenador lento',
+        'Necesito ayuda, desde hace unos dias mi ordenador va muy lento, quizas tenga un virus',
+        'ordenador.jpg'),
+    _Oferta(
+        'Cambio de cableado electrico',
+        'Buenos dias necesito ayuda para cambiar el cableado electrico de una habitación debido a la humedad',
+        'enchufe.jpg'),
   ];
 
   late TransformationController controller;

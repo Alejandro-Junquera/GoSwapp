@@ -51,6 +51,8 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                               bottomLeft: Radius.circular(30))),
                       child: Container(
                           decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.orangeAccent, width: 3),
                             color: Colors.grey[350],
                             borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(30),
@@ -62,7 +64,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                               Padding(
                                 padding: EdgeInsets.only(top: 30, bottom: 30),
                                 child: Text(
-                                  'Cambio de enchufe',
+                                  'Cablear red',
                                   style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold),
@@ -75,7 +77,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                   style: const TextStyle(
                                     fontSize: 18,
                                   ),
-                                  "Laborum culpa id ullamco ad incididunt culpa dolor ea. Et dolore in et cillum et aliquip occaecat veniam tempor ea fugiat anim voluptate. Sunt cillum sunt non non exercitation voluptate laborum consequat id. Non nulla sunt aute eu officia Lorem incididunt duis velit esse excepteur.Commodo est dolor consequat commodo. Ullamco reprehenderit ut laborum veniam adipisicing. Non amet voluptate dolor labore laboris qui aute aute labore est dolor deserunt occaecat.",
+                                  "Cablear una habitación con cable de red desde la habitación donde se encuentra el router",
                                   dropCap: DropCap(
                                       width: 150,
                                       height: 150,
@@ -87,7 +89,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                               topRight: Radius.circular(30),
                                               bottomLeft: Radius.circular(30)),
                                           child: Image.asset(
-                                            "assets/images/enchufe.jpg",
+                                            "assets/images/cablear.jpg",
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -129,12 +131,12 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                     itemBuilder: (context, _) => const Icon(
                                         Icons.star,
                                         color: Colors.yellow),
-                                    rating: 1, //TODO: NUMERO
+                                    rating: 4, //TODO: NUMERO
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 80),
                                     child: Text(
-                                      "100",
+                                      "400",
                                       style: TextStyle(fontSize: 18),
                                     ),
                                   )
@@ -149,12 +151,12 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                 disabledColor: Colors.grey,
                                 elevation: 0,
                                 color: Colors.blueGrey[600],
-                                onPressed: () async {},
+                                onPressed: null,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 80, vertical: 15),
                                   child: const Text(
-                                    'Aplicar',
+                                    'Aplicada',
                                     //loginForm.isLoading ? 'Wait' : 'Submit',
                                     style: TextStyle(color: Colors.white),
                                   ),
