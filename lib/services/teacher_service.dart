@@ -39,6 +39,33 @@ class TeacherService extends ChangeNotifier {
     return tareasProf;
   }
 
+  obtenerTareasPublicadasDeUnCiclo() async {
+    tareasProf.clear();
+    String? token = await AuthService().readToken();
+    String? cicleId = await AuthService().readCicleId();
+    final url = Uri.http(_baseUrl, '/public/api/tasks/cicle/$cicleId');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final List<dynamic> decodedResp = json.decode(resp.body);
+
+    for (var i in decodedResp) {
+      if (TareasDataUser.fromJson(i).grade != null) {
+        tareasProf.add(TareasDataUser.fromJson(i));
+      }
+    }
+    isLoading = false;
+    notifyListeners();
+    return tareasProf;
+  }
+
   asignarDificultadTarea(double grade, int idTarea) async {
     String? token = await AuthService().readToken();
     final Map<String, dynamic> asignarDificultad = {
