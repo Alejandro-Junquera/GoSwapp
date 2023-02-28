@@ -54,6 +54,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => NuevaTareaFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TeacherService(),
         )
       ],
       child: MaterialApp(

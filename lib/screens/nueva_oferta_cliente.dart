@@ -133,7 +133,7 @@ class NuevaOfertaClienteScreen extends StatelessWidget {
                                     },
                                     validator: (value) {
                                       return (value != null &&
-                                              value.length != 9)
+                                              value.length == 9)
                                           ? null
                                           : 'El teléfono es inválido';
                                     },
@@ -228,7 +228,7 @@ class NuevaOfertaClienteScreen extends StatelessWidget {
                                   nuevaTareaFormProvider.description,
                                   0,
                                   'Prueba',
-                                  1);
+                                  2);
                               // ignore: use_build_context_synchronously
                               Navigator.of(context)
                                   .pushReplacementNamed('cliente');

@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: depend_on_referenced_packages
 
-// ignore: depend_on_referenced_packages
+import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:provider/provider.dart';
+import '../../models/models.dart';
 
 class OfertasGlobalesPage extends StatefulWidget {
   const OfertasGlobalesPage({super.key});
@@ -11,22 +15,21 @@ class OfertasGlobalesPage extends StatefulWidget {
 }
 
 class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
-  final listaOfertas = [
-    _Oferta(
-        'Ordenador lento',
-        'Necesito ayuda, desde hace unos dias mi ordenador va muy lento, quizas tenga un virus',
-        'ordenador.jpg'),
-    _Oferta(
-        'Cambio de cableado electrico',
-        'Buenos dias necesito ayuda para cambiar el cableado electrico de una habitación debido a la humedad',
-        'enchufe.jpg'),
-  ];
+  List<TareasDataUser> listaOfertasSinDificultad = [];
+  obtenerTareasSinDificultad() async {
+    final teacherService = Provider.of<TeacherService>(context, listen: false);
+    await teacherService.obtenerTareasDeUnCiclo();
+    setState(() {
+      listaOfertasSinDificultad = teacherService.tareasProf;
+    });
+  }
 
   late TransformationController controller;
   TapDownDetails? tapDownDetails;
   @override
   void initState() {
     super.initState();
+    obtenerTareasSinDificultad();
     controller = TransformationController();
   }
 
@@ -38,25 +41,21 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final teacherService = Provider.of<TeacherService>(context);
+    if (teacherService.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return Column(
       children: [
-        Container(
-          height: 50,
-          width: double.infinity,
-          color: Colors.red,
-          child: const Text(
-            'Filtros en progreso',
-            style: TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-        ),
         Expanded(
           child: ListView.builder(
-              itemCount: listaOfertas.length,
+              itemCount: listaOfertasSinDificultad.length,
               itemBuilder: (context, index) {
-                final oferta = listaOfertas[index];
+                final tarea = listaOfertasSinDificultad[index];
+                double dificultad = 0;
+
                 return ExpansionTile(
-                  title: Text(oferta.titulo),
+                  title: Text(tarea.title.toString()),
                   children: [
                     GestureDetector(
                       onDoubleTapDown: (details) => tapDownDetails = details,
@@ -83,8 +82,8 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                             aspectRatio: 1,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/${oferta.imagen}',
+                              child: Image.network(
+                                'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -93,7 +92,7 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(oferta.descripcion),
+                    Text(tarea.description.toString()),
                     const SizedBox(
                       height: 30,
                     ),
@@ -102,8 +101,8 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                       height: 5,
                     ),
                     RatingBar.builder(
-                      initialRating: 0.5,
-                      minRating: 0.5,
+                      initialRating: dificultad,
+                      minRating: 0,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
@@ -111,7 +110,7 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                       itemBuilder: (context, _) =>
                           const Icon(Icons.star, color: Colors.amber),
                       onRatingUpdate: (rating) {
-                        print(rating);
+                        dificultad = rating;
                       },
                     ),
                     const SizedBox(
@@ -121,7 +120,28 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         MaterialButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            final teacherService = Provider.of<TeacherService>(
+                                context,
+                                listen: false);
+
+                            if (dificultad == 0) {
+                              customToast(
+                                  'Asigne una dificultad a la tarea', context);
+                            } else {
+                              await teacherService.asignarDificultadTarea(
+                                  dificultad, tarea.id!);
+                              setState(() {
+                                listaOfertasSinDificultad.removeAt(index);
+                              });
+
+                              // ignore: use_build_context_synchronously
+                              customToast(
+                                  'Tarea ${tarea.title} publicada correctamente',
+                                  context);
+                            }
+                          },
                           color: Colors.green,
                           child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.30,
@@ -131,7 +151,42 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                               )),
                         ),
                         MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: Text(
+                                          '¿Eliminar tarea ${tarea.title}?'),
+                                      content: const Text('¿Estas seguro?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('No'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final teacherService =
+                                                Provider.of<TeacherService>(
+                                                    context,
+                                                    listen: false);
+                                            teacherService
+                                                .eliminarUnaTarea(tarea.id!);
+                                            setState(() {
+                                              listaOfertasSinDificultad
+                                                  .removeAt(index);
+                                            });
+                                            customToast(
+                                                'Tarea ${tarea.title} eliminada correctamente',
+                                                context);
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Si'),
+                                        ),
+                                      ],
+                                    ));
+                          },
                           color: Colors.red,
                           child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.30,
@@ -149,12 +204,26 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
       ],
     );
   }
-}
 
-//TODO: BORRAR EN UN FUTURO
-class _Oferta {
-  final String titulo;
-  final String descripcion;
-  final String imagen;
-  _Oferta(this.titulo, this.descripcion, this.imagen);
+  void customToast(String message, BuildContext context) {
+    showToast(
+      message,
+      textStyle: const TextStyle(
+        fontSize: 14,
+        wordSpacing: 0.1,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      textPadding: const EdgeInsets.all(23),
+      fullWidth: true,
+      toastHorizontalMargin: 25,
+      borderRadius: BorderRadius.circular(15),
+      backgroundColor: Colors.blueGrey[500],
+      alignment: Alignment.bottomCenter,
+      position: StyledToastPosition.top,
+      duration: const Duration(seconds: 3),
+      animation: StyledToastAnimation.slideFromTop,
+      context: context,
+    );
+  }
 }
