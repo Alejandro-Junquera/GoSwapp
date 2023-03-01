@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_aplicacion_ganadora">
    <application
-        android:label="flutter_aplicacion_ganadora"
+        android:label="GoSwapp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

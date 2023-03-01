@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ class UserService extends ChangeNotifier {
   final String _baseUrl = 'goswapp.allsites.es';
   bool isLoading = true;
   final List<TareasDataUser> misTareas = [];
+
+  File? newPictureFile;
 
   obtenerTareasUsuario() async {
     misTareas.clear();
@@ -66,5 +69,11 @@ class UserService extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return decodedResp;
+  }
+
+  void updateImage(String path) {
+    newPictureFile = File.fromUri(Uri(path: path));
+
+    notifyListeners();
   }
 }

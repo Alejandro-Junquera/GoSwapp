@@ -11,7 +11,6 @@ class InicioScreen extends StatelessWidget {
         centerTitle: true,
         title: const Text("Inicio"),
         backgroundColor: Colors.blueGrey[500],
-        shadowColor: Colors.amber,
       ),
       body: Center(
         child: FutureBuilder(
@@ -45,11 +44,14 @@ class InicioScreen extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(300),
-                            child: const Image(
-                                image:
-                                    AssetImage("assets/images/trueque2.png")),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 30),
+                            child: Image(
+                              image: AssetImage("assets/images/logo.png"),
+                              width: 350,
+                              height: 350,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           const SizedBox(
                             height: 50,

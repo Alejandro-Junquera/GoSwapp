@@ -1,13 +1,23 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
-class NuevaOfertaClienteScreen extends StatelessWidget {
+class NuevaOfertaClienteScreen extends StatefulWidget {
   const NuevaOfertaClienteScreen({super.key});
 
+  @override
+  State<NuevaOfertaClienteScreen> createState() =>
+      _NuevaOfertaClienteScreenState();
+}
+
+class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
+  String image = '';
   @override
   Widget build(BuildContext context) {
     final nuevaTareaFormProvider = Provider.of<NuevaTareaFormProvider>(context);
@@ -32,10 +42,15 @@ class NuevaOfertaClienteScreen extends StatelessWidget {
                     child: SizedBox(
                       height: 150,
                       width: 250,
-                      child: Image.asset(
-                        'assets/images/enchufe.jpg',
-                        fit: BoxFit.fill,
-                      ),
+                      child: image == ''
+                          ? Image.asset(
+                              'assets/images/no-image.jpg',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              File(image),
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                 ]),
@@ -178,11 +193,11 @@ class NuevaOfertaClienteScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 8.0),
+                              vertical: 2, horizontal: 8.0),
                           child: TextFormField(
                             autocorrect: false,
                             keyboardType: TextInputType.multiline,
-                            maxLines: 7,
+                            maxLines: 4,
                             decoration: InputDecoration(
                                 enabledBorder: const OutlineInputBorder(
                                   borderSide:
@@ -253,7 +268,24 @@ class NuevaOfertaClienteScreen extends StatelessWidget {
           right: MediaQuery.of(context).size.width / 7,
           child: IconButton(
             icon: const Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: () async {
+              final userService =
+                  Provider.of<UserService>(context, listen: false);
+
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.camera);
+
+              if (photo == null) {
+                print("no se ha elegido imagen");
+                return;
+              }
+              setState(() {
+                image = photo.path;
+              });
+
+              userService.updateImage(photo.path);
+            },
             color: Colors.white,
           ),
         ),

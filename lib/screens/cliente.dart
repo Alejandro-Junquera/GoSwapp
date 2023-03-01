@@ -59,6 +59,12 @@ class _ClienteScreenState extends State<ClienteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final usuarioService = Provider.of<UserService>(context);
+    if (usuarioService.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('Menu Usuario')),
       body: SizedBox(
