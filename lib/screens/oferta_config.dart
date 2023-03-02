@@ -232,13 +232,24 @@ class _CardPersonalizada extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              RatingBarIndicator(
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) =>
-                    const Icon(Icons.star, color: Colors.amber),
-                rating: 2.5, //TODO: NUMERO CAMBIABLE
-              ),
+              Row(children: [
+                RatingBarIndicator(
+                  itemCount: 5,
+
+                  itemBuilder: (context, _) =>
+                      const Icon(Icons.star, color: Colors.amber),
+                  rating: 2.5, //TODO: NUMERO CAMBIABLE
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30.0),
+                  child: IconButton(
+                      color: Colors.blue,
+                      onPressed: (() {
+                        Navigator.pushNamed(context, 'googleMap');
+                      }),
+                      icon: Icon(Icons.location_on)),
+                )
+              ]),
             ],
           ),
         ),

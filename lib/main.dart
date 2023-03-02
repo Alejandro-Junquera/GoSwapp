@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
             'crearProfesor': (_) => const CrearProfresorScreen(),
             'alumno': (_) => const AlumnoScreen(),
             'infoOfertaCliente': (_) => const InfoOfertaClienteScreen(),
+            'googleMap': (_) => const GoogleMapScreen(),
 
             //'register': (_) => RegisterScreen(),
           },
