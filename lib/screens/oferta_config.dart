@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfertaConfigScreen extends StatefulWidget {
   const OfertaConfigScreen({super.key});
@@ -9,6 +10,14 @@ class OfertaConfigScreen extends StatefulWidget {
 }
 
 class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
+  whatsapp() async {
+    var contact = "+34619809487";
+    var androidUrl =
+        "whatsapp://send?phone=$contact&text=Hola soy [Inserte nombre profesor], le contanctamos del Instituto San Ignacio Cadiz con motivo de su publicación [Inserte titulo de tarea] en nuestra aplicación GoSwapp. Nos gustaría fijar una fecha y hora a la que podamos ir a su domicilio a solucionar su problema";
+
+    await launchUrl(Uri.parse(androidUrl));
+  }
+
   final listaAlumnos = [
     _Alumno("ALBERTO", "IEA", false),
     _Alumno("ALEJANDRO", "IEA", false),
@@ -21,6 +30,10 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Oferta"),
+          actions: [
+            IconButton(
+                onPressed: () => whatsapp(), icon: Icon(Icons.phone_android))
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
