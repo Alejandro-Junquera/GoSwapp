@@ -19,7 +19,7 @@ class OfertasPublicadasPage extends StatefulWidget {
 
 class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
   List<bool> estadoSelecionado = <bool>[true, false, false];
-  List<TareasDataUser> listaOfertasPublicadas = [];
+  List<TareaDelCiclo> listaOfertasPublicadas = [];
   obtenerTareasSinDificultad() async {
     final teacherService = Provider.of<TeacherService>(context, listen: false);
     await teacherService.obtenerTareasPublicadasDeUnCiclo();

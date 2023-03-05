@@ -66,7 +66,19 @@ class _ClienteScreenState extends State<ClienteScreen> {
       );
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('Menu Usuario')),
+      appBar: AppBar(
+        title: const Text('Menu Usuario'),
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () async {
+            final logOutService =
+                Provider.of<AuthService>(context, listen: false);
+            await logOutService.logout();
+            // ignore: use_build_context_synchronously
+            Navigator.pushReplacementNamed(context, 'login');
+          },
+        ),
+      ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: ListView.builder(
@@ -133,7 +145,11 @@ class _ClienteScreenState extends State<ClienteScreen> {
                             width: MediaQuery.of(context).size.width * 0.47,
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(
+                                      color: tarea.completionDate != null
+                                          ? Colors.green
+                                          : Colors.orange)),
                               elevation: 10,
                               child: Column(
                                 children: [
@@ -159,7 +175,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                       ),
                                     ),
                                   ),
-                                  const Text('Falta fecha finalizacion')
+                                  tarea.completionDate != null
+                                      ? Text('Tarea finalizada')
+                                      : Text('En proceso')
                                 ],
                               ),
                             ),

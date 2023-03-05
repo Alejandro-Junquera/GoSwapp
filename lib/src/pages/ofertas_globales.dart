@@ -15,7 +15,7 @@ class OfertasGlobalesPage extends StatefulWidget {
 }
 
 class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
-  List<TareasDataUser> listaOfertasSinDificultad = [];
+  List<TareaDelCiclo> listaOfertasSinDificultad = [];
   obtenerTareasSinDificultad() async {
     final teacherService = Provider.of<TeacherService>(context, listen: false);
     await teacherService.obtenerTareasDeUnCiclo();

@@ -1,4 +1,6 @@
 // ignore: depend_on_referenced_packages
+import 'package:flutter_aplicacion_ganadora/models/models.dart';
+import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
@@ -13,46 +15,56 @@ class OfertasAdminPage extends StatefulWidget {
 }
 
 class _OfertasAdminPageState extends State<OfertasAdminPage> {
-  final listaOfertas = [
-    _Oferta(
-        titulo: 'Ordenador lento',
-        descripcion:
-            'Necesito ayuda, desde hace unos dias mi ordenador va muy lento, quizas tenga un virus',
-        imagen: 'enchufe.jpg'),
-    _Oferta(
-        titulo: 'Cambio de cableado electrico',
-        descripcion:
-            'Buenos dias necesito ayuda para cambiar el cableado electrico de una habitación debido a la humedad',
-        imagen: 'enchufe.jpg'),
-  ];
-  final listaCiclos = [
-    _Ciclo(1, 'DAM'),
-    _Ciclo(2, 'IEA'),
-  ];
+  List<TareasDataUser> tareasSinCiclo = [];
+  List<CicloData> ciclos = [];
+  obtenerTareasSinCiclo() async {
+    final adminService = Provider.of<AdminService>(context, listen: false);
+    adminService.obtenerTareasSinCiclo();
+    setState(() {
+      tareasSinCiclo = adminService.tareasPorAsignar;
+    });
+  }
+
+  getCiclos() {
+    Future.delayed(
+      Duration(milliseconds: 500),
+      () async {
+        final ciclosService =
+            Provider.of<CiclosService>(context, listen: false);
+        await ciclosService.getCiclos();
+        setState(() {
+          ciclos = ciclosService.ciclos;
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    obtenerTareasSinCiclo();
+    getCiclos();
+  }
+
   @override
   Widget build(BuildContext context) {
     final registerForm = Provider.of<RegisterFormProvider>(context);
+    final adminService = Provider.of<AdminService>(context);
+    if (adminService.isLoading)
+      return Center(child: CircularProgressIndicator());
     return Column(
       children: [
         Expanded(
           child: ListView.separated(
-            itemCount: listaOfertas.length,
+            itemCount: tareasSinCiclo.length,
             itemBuilder: ((context, index) {
-              final oferta = listaOfertas[index];
+              final tarea = tareasSinCiclo[index];
               return Slidable(
-                key: Key(oferta.titulo),
                 startActionPane:
                     ActionPane(motion: const DrawerMotion(), children: [
                   SlidableAction(
-                    onPressed: (BuildContext context) {
-                      oferta.ciclo_id = registerForm.ciclos_id;
-                      if (oferta.ciclo_id == 0) {
-                        print('mal');
-                      } else {
-                        //endpoint asignar
-                        registerForm.ciclos_id = 0;
-                      }
-                    },
+                    onPressed: (BuildContext context) {},
                     backgroundColor: Colors.green,
                     icon: Icons.check,
                   ),
@@ -77,7 +89,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Center(
-                          child: Text('${oferta.titulo}'),
+                          child: Text('${tarea.title}'),
                         ),
                       ),
                       Padding(
@@ -85,7 +97,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                         child: SizedBox(
                           height: 95,
                           child: Text(
-                            oferta.descripcion,
+                            tarea.description.toString(),
                             textAlign: TextAlign.justify,
                           ),
                         ),
@@ -97,10 +109,10 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                                   borderSide:
                                       BorderSide(color: Colors.blueGrey))),
                           hint: const Text('Select a cicle'),
-                          items: listaCiclos.map((e) {
+                          items: ciclos.map((e) {
                             return DropdownMenuItem(
                               value: e.id,
-                              child: Text(e.nombre.toString()),
+                              child: Text(e.name.toString()),
                             );
                           }).toList(),
                           onChanged: (value) {
@@ -123,22 +135,4 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
       ],
     );
   }
-}
-
-class _Oferta {
-  String titulo;
-  String descripcion;
-  String imagen;
-  int? ciclo_id;
-  _Oferta(
-      {required this.titulo,
-      required this.descripcion,
-      required this.imagen,
-      this.ciclo_id});
-}
-
-class _Ciclo {
-  final int id;
-  final String nombre;
-  _Ciclo(this.id, this.nombre);
 }

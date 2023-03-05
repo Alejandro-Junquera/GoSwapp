@@ -10,7 +10,7 @@ import '../models/models.dart';
 class TeacherService extends ChangeNotifier {
   final String _baseUrl = 'goswapp.allsites.es';
   bool isLoading = true;
-  final List<TareasDataUser> tareasProf = [];
+  final List<TareaDelCiclo> tareasProf = [];
 
   obtenerTareasDeUnCiclo() async {
     tareasProf.clear();
@@ -27,11 +27,11 @@ class TeacherService extends ChangeNotifier {
         "Authorization": 'Bearer $token',
       },
     );
-    final List<dynamic> decodedResp = json.decode(resp.body);
-
-    for (var i in decodedResp) {
-      if (TareasDataUser.fromJson(i).grade == null) {
-        tareasProf.add(TareasDataUser.fromJson(i));
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    var tareasUser = TareasDelCiclo.fromJson(decodedResp);
+    for (var i in tareasUser.tareasDelCiclo!) {
+      if (i.grade == null) {
+        tareasProf.add(i);
       }
     }
     isLoading = false;
@@ -54,11 +54,12 @@ class TeacherService extends ChangeNotifier {
         "Authorization": 'Bearer $token',
       },
     );
-    final List<dynamic> decodedResp = json.decode(resp.body);
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
-    for (var i in decodedResp) {
-      if (TareasDataUser.fromJson(i).grade != null) {
-        tareasProf.add(TareasDataUser.fromJson(i));
+    var tareasUser = TareasDelCiclo.fromJson(decodedResp);
+    for (var i in tareasUser.tareasDelCiclo!) {
+      if (i.grade != null) {
+        tareasProf.add(i);
       }
     }
     isLoading = false;

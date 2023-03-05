@@ -1,27 +1,28 @@
-class TareasUser {
-  List<TareasDataUser>? tareas;
+class TareasDelCiclo {
+  List<TareaDelCiclo>? tareasDelCiclo;
 
-  TareasUser({this.tareas});
+  TareasDelCiclo({this.tareasDelCiclo});
 
-  TareasUser.fromJson(Map<String, dynamic> json) {
-    if (json['Tareas'] != null) {
-      tareas = <TareasDataUser>[];
-      json['Tareas'].forEach((v) {
-        tareas!.add(TareasDataUser.fromJson(v));
+  TareasDelCiclo.fromJson(Map<String, dynamic> json) {
+    if (json['Tareas del ciclo'] != null) {
+      tareasDelCiclo = <TareaDelCiclo>[];
+      json['Tareas del ciclo'].forEach((v) {
+        tareasDelCiclo!.add(TareaDelCiclo.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (tareas != null) {
-      data['Tareas'] = tareas!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.tareasDelCiclo != null) {
+      data['Tareas del ciclo'] =
+          this.tareasDelCiclo!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class TareasDataUser {
+class TareaDelCiclo {
   int? id;
   String? title;
   int? numBoscoins;
@@ -38,7 +39,7 @@ class TareasDataUser {
   String? clientPhone;
   String? clientRating;
 
-  TareasDataUser(
+  TareaDelCiclo(
       {this.id,
       this.title,
       this.numBoscoins,
@@ -55,7 +56,7 @@ class TareasDataUser {
       this.clientPhone,
       this.clientRating});
 
-  TareasDataUser.fromJson(Map<String, dynamic> json) {
+  TareaDelCiclo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     numBoscoins = json['num_boscoins'];

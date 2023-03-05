@@ -74,7 +74,7 @@ class _RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<_RegisterForm> {
-  List<CiclosData> ciclos = [];
+  List<CicloData> ciclos = [];
 
   getCiclos() async {
     ciclos.clear();

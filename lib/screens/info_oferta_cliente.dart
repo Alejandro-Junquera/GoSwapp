@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_aplicacion_ganadora/models/tareas_user.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class InfoOfertaClienteScreen extends StatelessWidget {
+import '../models/models.dart';
+import '../services/services.dart';
+
+class InfoOfertaClienteScreen extends StatefulWidget {
   const InfoOfertaClienteScreen({super.key});
 
+  @override
+  State<InfoOfertaClienteScreen> createState() =>
+      _InfoOfertaClienteScreenState();
+}
+
+class _InfoOfertaClienteScreenState extends State<InfoOfertaClienteScreen> {
   @override
   Widget build(BuildContext context) {
     final tarea = ModalRoute.of(context)!.settings.arguments as TareasDataUser;
@@ -49,11 +57,6 @@ class InfoOfertaClienteScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(
                                     height: 20,
-                                  ),
-                                  const Text(
-                                    "Categoría: undefined",
-                                    style: TextStyle(fontSize: 16),
-                                    textAlign: TextAlign.end,
                                   ),
                                 ],
                               ),
@@ -128,7 +131,12 @@ class InfoOfertaClienteScreen extends StatelessWidget {
                                     height: 15,
                                   ),
                                   RatingBar.builder(
-                                    initialRating: 0.5,
+                                    ignoreGestures: tarea.clientRating != null
+                                        ? true
+                                        : false,
+                                    initialRating: tarea.clientRating != null
+                                        ? double.parse(tarea.clientRating!)
+                                        : 0.5,
                                     minRating: 0.5,
                                     direction: Axis.horizontal,
                                     allowHalfRating: true,
@@ -136,7 +144,7 @@ class InfoOfertaClienteScreen extends StatelessWidget {
                                     itemPadding: const EdgeInsets.symmetric(
                                         horizontal: 4.0),
                                     itemBuilder: (context, _) => const Icon(
-                                        Icons.heart_broken,
+                                        Icons.favorite,
                                         color: Colors.red),
                                     onRatingUpdate: (rating) {},
                                   ),
@@ -147,6 +155,12 @@ class InfoOfertaClienteScreen extends StatelessWidget {
                                       child: Column(
                                     children: [
                                       TextFormField(
+                                        initialValue: tarea.comment != null
+                                            ? tarea.comment
+                                            : '',
+                                        readOnly: tarea.comment != null
+                                            ? true
+                                            : false,
                                         decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -156,7 +170,7 @@ class InfoOfertaClienteScreen extends StatelessWidget {
                                             borderSide: BorderSide(
                                                 color: Colors.blue, width: 2),
                                           ),
-                                          labelText: 'Falta info de la api',
+                                          labelText: 'Comentario',
                                           labelStyle:
                                               TextStyle(color: Colors.grey),
                                         ),
@@ -165,22 +179,27 @@ class InfoOfertaClienteScreen extends StatelessWidget {
                                       const SizedBox(
                                         height: 50,
                                       ),
-                                      MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        disabledColor: Colors.grey,
-                                        elevation: 0,
-                                        color: Colors.blueGrey[600],
-                                        onPressed: () {},
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 80, vertical: 15),
-                                          child: const Text(
-                                            'Comentar',
-                                            //loginForm.isLoading ? 'Wait' : 'Submit',
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                      Visibility(
+                                        visible: tarea.comment != null
+                                            ? false
+                                            : true,
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          disabledColor: Colors.grey,
+                                          elevation: 0,
+                                          color: Colors.blueGrey[600],
+                                          onPressed: () {},
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 80, vertical: 15),
+                                            child: const Text(
+                                              'Comentar',
+                                              //loginForm.isLoading ? 'Wait' : 'Submit',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           ),
                                         ),
                                       ),

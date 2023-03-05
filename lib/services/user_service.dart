@@ -40,17 +40,22 @@ class UserService extends ChangeNotifier {
     return misTareas;
   }
 
-  crearNuevaTareaUsuario(String title, String description, int num_boscoins,
-      String imagen, int cicle_id) async {
+  crearNuevaTareaUsuario(
+    String title,
+    String description,
+    String address,
+    String phone,
+    String imagen,
+  ) async {
     String? idUser = await AuthService().readId();
     String? token = await AuthService().readToken();
     final Map<String, dynamic> nuevaTarea = {
       'title': title,
       'description': description,
-      'num_boscoins': num_boscoins,
+      'client_address': address,
+      'client_phone': phone,
       'imagen': imagen,
       'user_id': idUser,
-      'cicle_id': cicle_id
     };
     final url = Uri.http(_baseUrl, '/public/api/tasks');
     isLoading = true;

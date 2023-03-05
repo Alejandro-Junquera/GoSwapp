@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +6,16 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 
 class CiclosService extends ChangeNotifier {
-  final String _baseUrl = 'localhost:8000';
+  final String _baseUrl = 'goswapp.allsites.es';
   final storage = const FlutterSecureStorage();
-  List<CiclosData> ciclos = [];
+  List<CicloData> ciclos = [];
+  bool isLoading = true;
 
-  Future<List<CiclosData>> getCiclos() async {
-    final url = Uri.http(_baseUrl, '/api/cicles', {});
+  getCiclos() async {
+    ciclos.clear();
+    isLoading = true;
+    notifyListeners();
+    final url = Uri.http(_baseUrl, '/public/api/cicles', {});
 
     final resp = await http.get(
       url,
@@ -29,6 +32,8 @@ class CiclosService extends ChangeNotifier {
     for (var i in ciclo.ciclos!) {
       ciclos.add(i);
     }
+    isLoading = false;
+    notifyListeners();
 
     return ciclos;
   }

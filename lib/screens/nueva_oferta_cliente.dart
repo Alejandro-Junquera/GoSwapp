@@ -241,9 +241,9 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
                               await userService.crearNuevaTareaUsuario(
                                   nuevaTareaFormProvider.title,
                                   nuevaTareaFormProvider.description,
-                                  0,
-                                  'Prueba',
-                                  2);
+                                  nuevaTareaFormProvider.adress,
+                                  nuevaTareaFormProvider.phone,
+                                  image);
                               // ignore: use_build_context_synchronously
                               Navigator.of(context)
                                   .pushReplacementNamed('cliente');
