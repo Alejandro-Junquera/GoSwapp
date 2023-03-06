@@ -15,8 +15,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   late MapController mapController;
   String location = '';
   List<Location> locations = [];
-  getLocation() async {
-    locations = await locationFromAddress('Calle Sagasta,Cadiz');
+  getLocation(String direccion) async {
+    locations = await locationFromAddress(direccion);
   }
 
   getRuta() {
@@ -51,12 +51,14 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     mapController = MapController(
       initMapWithUserPosition: true,
     );
-    getLocation();
+
     getRuta();
   }
 
   @override
   Widget build(BuildContext context) {
+    final direccion = ModalRoute.of(context)!.settings.arguments as String;
+    getLocation(direccion);
     return Scaffold(
         appBar: AppBar(title: Text('Mapa')),
         body: OSMFlutter(

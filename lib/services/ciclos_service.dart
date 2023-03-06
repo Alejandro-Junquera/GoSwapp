@@ -27,8 +27,6 @@ class CiclosService extends ChangeNotifier {
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
     var ciclo = Ciclos.fromJson(decodedResp);
-    print(decodedResp);
-
     for (var i in ciclo.ciclos!) {
       ciclos.add(i);
     }

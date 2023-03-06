@@ -131,7 +131,7 @@ class _InfoOfertaClienteScreenState extends State<InfoOfertaClienteScreen> {
                                     height: 15,
                                   ),
                                   RatingBar.builder(
-                                    ignoreGestures: tarea.clientRating != null
+                                    ignoreGestures: tarea.clientRating != '0.00'
                                         ? true
                                         : false,
                                     initialRating: tarea.clientRating != null

@@ -1,4 +1,6 @@
 // ignore: depend_on_referenced_packages
+import 'package:flutter_aplicacion_ganadora/models/models.dart';
+import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
@@ -13,19 +15,52 @@ class GestionarProfesoresPage extends StatefulWidget {
 }
 
 class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
-  final listaProfesores = [
-    _Profesor(1, 'Felix', 'Reyes Fernández', 'DAM'),
-    _Profesor(2, 'Cristina', 'Durán Martínez', 'Teleco'),
-  ];
+  List<ProfesorData> profesores = [];
+  List<CicloData> ciclos = [];
+  obtenerProfesores() async {
+    final adminService = Provider.of<AdminService>(context, listen: false);
+    adminService.obtenerProfesores();
+    setState(() {
+      profesores = adminService.profesores;
+    });
+  }
+
+  getCiclos() {
+    Future.delayed(
+      Duration(milliseconds: 500),
+      () async {
+        final ciclosService =
+            Provider.of<CiclosService>(context, listen: false);
+        await ciclosService.getCiclos();
+        setState(() {
+          ciclos = ciclosService.ciclos;
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    obtenerProfesores();
+    getCiclos();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final adminService = Provider.of<AdminService>(context);
+    if (adminService.isLoading)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     return Column(
       children: [
         Expanded(
             child: ListView.separated(
-          itemCount: listaProfesores.length,
+          itemCount: profesores.length,
           itemBuilder: ((context, index) {
-            final profesor = listaProfesores[index];
+            final profesor = profesores[index];
             return Slidable(
               startActionPane:
                   ActionPane(motion: const DrawerMotion(), children: [
@@ -44,8 +79,8 @@ class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
                 height: 70,
                 color: Colors.grey[400],
                 child: ListTile(
-                  title: Text('${profesor.nombre} ${profesor.apellidos}'),
-                  subtitle: Text(profesor.ciclo),
+                  title: Text('${profesor.firstname} ${profesor.surname}'),
+                  subtitle: Text(''),
                   trailing: const Icon(Icons.swipe_right),
                 ),
               ),
@@ -72,12 +107,4 @@ class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
       ],
     );
   }
-}
-
-class _Profesor {
-  final int id;
-  final String nombre;
-  final String apellidos;
-  final String ciclo;
-  _Profesor(this.id, this.nombre, this.apellidos, this.ciclo);
 }

@@ -71,7 +71,8 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
             ...listaOfertasPublicadas
                 .map((tarea) => ListTile(
                       onTap: () {
-                        Navigator.pushNamed(context, 'ofertaconfig');
+                        Navigator.pushNamed(context, "ofertaconfig",
+                            arguments: tarea);
                       },
                       title: Row(
                         children: [

@@ -138,8 +138,7 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
 
                               // ignore: use_build_context_synchronously
                               customToast(
-                                  'Tarea ${tarea.title} publicada correctamente',
-                                  context);
+                                  'Tarea publicada correctamente', context);
                             }
                           },
                           color: Colors.green,

@@ -1,6 +1,7 @@
 // ignore: depend_on_referenced_packages
 import 'package:flutter_aplicacion_ganadora/models/models.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
@@ -49,7 +50,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    final registerForm = Provider.of<RegisterFormProvider>(context);
+    final adminForm = Provider.of<AdminFormProvider>(context);
     final adminService = Provider.of<AdminService>(context);
     if (adminService.isLoading)
       return Center(child: CircularProgressIndicator());
@@ -64,13 +65,58 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                 startActionPane:
                     ActionPane(motion: const DrawerMotion(), children: [
                   SlidableAction(
-                    onPressed: (BuildContext context) {},
+                    onPressed: (BuildContext context) {
+                      if (adminForm.cicloId == 0) {
+                        customToast('Seleciona un ciclo', context);
+                      } else {
+                        final adminService =
+                            Provider.of<AdminService>(context, listen: false);
+                        adminService.asignarCicloaTarea(
+                            tarea.id!, adminForm.cicloId);
+                        setState(() {
+                          tareasSinCiclo.removeAt(index);
+                        });
+
+                        customToast('Tarea publicada correctamente', context);
+                        adminForm.cicloId = 0;
+                      }
+                    },
                     backgroundColor: Colors.green,
                     icon: Icons.check,
                   ),
                   SlidableAction(
                     onPressed: (BuildContext context) {
-                      //EnsPoint delete
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: Text('¿Eliminar tarea ${tarea.title}?'),
+                                content: const Text('¿Estas seguro?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('No'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      final teacherService =
+                                          Provider.of<TeacherService>(context,
+                                              listen: false);
+                                      teacherService
+                                          .eliminarUnaTarea(tarea.id!);
+                                      setState(() {
+                                        tareasSinCiclo.removeAt(index);
+                                      });
+                                      customToast(
+                                          'Tarea ${tarea.title} eliminada correctamente',
+                                          context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Si'),
+                                  ),
+                                ],
+                              ));
                     },
                     backgroundColor: Colors.red,
                     icon: Icons.delete,
@@ -83,7 +129,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                       borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(10),
                           topRight: Radius.circular(10))),
-                  height: 210,
+                  height: 240,
                   child: Column(
                     children: [
                       Padding(
@@ -116,7 +162,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                             );
                           }).toList(),
                           onChanged: (value) {
-                            registerForm.ciclos_id = value!;
+                            adminForm.cicloId = value!;
                           },
                         ),
                       )
@@ -133,6 +179,28 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void customToast(String message, BuildContext context) {
+    showToast(
+      message,
+      textStyle: const TextStyle(
+        fontSize: 14,
+        wordSpacing: 0.1,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      textPadding: const EdgeInsets.all(23),
+      fullWidth: true,
+      toastHorizontalMargin: 25,
+      borderRadius: BorderRadius.circular(15),
+      backgroundColor: Colors.blueGrey[500],
+      alignment: Alignment.bottomCenter,
+      position: StyledToastPosition.top,
+      duration: const Duration(seconds: 3),
+      animation: StyledToastAnimation.slideFromTop,
+      context: context,
     );
   }
 }

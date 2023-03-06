@@ -60,6 +60,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AdminService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AdminFormProvider(),
         )
       ],
       child: MaterialApp(

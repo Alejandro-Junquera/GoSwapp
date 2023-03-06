@@ -1,6 +1,9 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/models/models.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/services.dart';
 
 class OfertaConfigScreen extends StatefulWidget {
   const OfertaConfigScreen({super.key});
@@ -10,10 +13,10 @@ class OfertaConfigScreen extends StatefulWidget {
 }
 
 class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
-  whatsapp() async {
-    var contact = "+34619809487";
+  whatsapp(String phone, String tarea) async {
+    var contact = "+34$phone";
     var androidUrl =
-        "whatsapp://send?phone=$contact&text=Hola soy [Inserte nombre profesor], le contanctamos del Instituto San Ignacio Cadiz con motivo de su publicación [Inserte titulo de tarea] en nuestra aplicación GoSwapp. Nos gustaría fijar una fecha y hora a la que podamos ir a su domicilio a solucionar su problema";
+        "whatsapp://send?phone=$contact&text=Buenas, le contanctamos del Instituto San Ignacio Cadiz con motivo de su publicación $tarea en nuestra aplicación GoSwapp. Nos gustaría fijar una fecha y hora a la que podamos ir a su domicilio a solucionar su problema";
 
     await launchUrl(Uri.parse(androidUrl));
   }
@@ -27,20 +30,22 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tarea = ModalRoute.of(context)!.settings.arguments as TareaDelCiclo;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Oferta"),
           actions: [
             IconButton(
-                onPressed: () => whatsapp(), icon: Icon(Icons.phone_android))
+                onPressed: () => whatsapp(tarea.clientPhone!, tarea.title!),
+                icon: Icon(Icons.phone_android))
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(10.0),
-                child: _CardPersonalizada(),
+                child: _CardPersonalizada(tarea: tarea),
               ),
               ExpansionTile(
                 initiallyExpanded: true,
@@ -110,47 +115,49 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Card(
-                    color: const Color.fromARGB(255, 217, 217, 217),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        height: 220,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(children: [
-                          const Text(
-                            'Comentario Cliente',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: Text(
-                                "Ha finalizado la tarea en muy poco tiempo y en unas condiciones muy aceptables para ser un alumno.",
-                                style: TextStyle(fontSize: 16),
-                              ),
+                  padding: const EdgeInsets.all(10.0),
+                  child: tarea.comment != null
+                      ? Card(
+                          color: const Color.fromARGB(255, 217, 217, 217),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: SizedBox(
+                              height: 220,
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(children: [
+                                const Text(
+                                  'Comentario Cliente',
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: Text(
+                                      tarea.comment.toString(),
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                                RatingBarIndicator(
+                                  itemCount: 5,
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  itemBuilder: (context, _) => const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red),
+                                  rating: 4.5, //TODO: NUMERO CAMBIABLE
+                                ),
+                              ]),
                             ),
-                          ),
-                          RatingBarIndicator(
-                            itemCount: 5,
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => const Icon(
-                                Icons.heart_broken,
-                                color: Colors.red),
-                            rating: 4.5, //TODO: NUMERO CAMBIABLE
-                          ),
-                        ]),
-                      ),
-                    )),
-              ),
+                          ))
+                      : null),
               const SizedBox(
                 height: 30,
               ),
@@ -158,7 +165,35 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: Text('¿Eliminar tarea ${tarea.title}?'),
+                                content: const Text('¿Estas seguro?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('No'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      final teacherService =
+                                          Provider.of<TeacherService>(context,
+                                              listen: false);
+                                      teacherService
+                                          .eliminarUnaTarea(tarea.id!);
+
+                                      Navigator.pushReplacementNamed(
+                                          context, 'initProf');
+                                    },
+                                    child: const Text('Si'),
+                                  ),
+                                ],
+                              ));
+                    },
                     color: Colors.red,
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.4,
@@ -186,8 +221,10 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
 }
 
 class _CardPersonalizada extends StatelessWidget {
+  final TareaDelCiclo tarea;
   const _CardPersonalizada({
     Key? key,
+    required this.tarea,
   }) : super(key: key);
 
   @override
@@ -205,17 +242,25 @@ class _CardPersonalizada extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/images/enchufeRoto.jpg',
-                    fit: BoxFit.cover,
-                    width: 150,
-                    height: 150,
-                    scale: 5,
-                  ),
+                  tarea.imagen != null
+                      ? Image.network(
+                          tarea.imagen.toString(),
+                          fit: BoxFit.cover,
+                          width: 150,
+                          height: 150,
+                          scale: 5,
+                        )
+                      : Image.asset(
+                          'assets/images/no-image.jpg',
+                          fit: BoxFit.cover,
+                          width: 150,
+                          height: 150,
+                          scale: 5,
+                        ),
                   Column(
                     children: [
                       Text(
-                        "Cambiar interruptor",
+                        tarea.title.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold),
@@ -226,10 +271,10 @@ class _CardPersonalizada extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.4,
                         height: 100,
-                        child: const SingleChildScrollView(
+                        child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Text(
-                            "Modificar interruptor de corriente en mal estado debido a un golpe. Está roto",
+                            tarea.description.toString(),
                             maxLines: 50,
                             style: TextStyle(
                               fontSize: 16,
@@ -251,14 +296,15 @@ class _CardPersonalizada extends StatelessWidget {
 
                   itemBuilder: (context, _) =>
                       const Icon(Icons.star, color: Colors.amber),
-                  rating: 2.5, //TODO: NUMERO CAMBIABLE
+                  rating: double.parse(tarea.grade!), //TODO: NUMERO CAMBIABLE
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0),
                   child: IconButton(
                       color: Colors.blue,
                       onPressed: (() {
-                        Navigator.pushNamed(context, 'googleMap');
+                        Navigator.pushNamed(context, 'googleMap',
+                            arguments: tarea.clientAddress);
                       }),
                       icon: Icon(Icons.location_on)),
                 )
