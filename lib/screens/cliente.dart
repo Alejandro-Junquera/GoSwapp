@@ -117,7 +117,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                 ],
                               ),
                               child: GestureDetector(
-                                onTap: () => Navigator.pushNamed(
+                                onTap: () => Navigator.pushReplacementNamed(
                                     context, "infoOfertaCliente",
                                     arguments: tarea),
                                 child: Hero(

@@ -129,16 +129,14 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                             if (dificultad == 0) {
                               customToast(
                                   'Asigne una dificultad a la tarea', context);
+                              print('entra');
                             } else {
-                              await teacherService.asignarDificultadTarea(
-                                  dificultad, tarea.id!);
-                              setState(() {
-                                listaOfertasSinDificultad.removeAt(index);
-                              });
-
-                              // ignore: use_build_context_synchronously
                               customToast(
                                   'Tarea publicada correctamente', context);
+                              await teacherService.asignarDificultadTarea(
+                                  dificultad, tarea.id!);
+
+                              listaOfertasSinDificultad.removeAt(index);
                             }
                           },
                           color: Colors.green,

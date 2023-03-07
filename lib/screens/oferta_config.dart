@@ -34,6 +34,10 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Oferta"),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, 'initProf')),
           actions: [
             IconButton(
                 onPressed: () => whatsapp(tarea.clientPhone!, tarea.title!),

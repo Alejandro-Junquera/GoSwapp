@@ -81,4 +81,29 @@ class UserService extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  valorarTarea(int tareaId, double rating, String comentario) async {
+    String? token = await AuthService().readToken();
+    String puntuacion = rating.toString();
+    final Map<String, dynamic> valoraciones = {
+      'comment': comentario,
+      'client_rating': puntuacion,
+    };
+    final url = Uri.http(_baseUrl, '/public/api/completed-tasks/$tareaId/rate');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.put(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+      body: json.encode(valoraciones),
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    isLoading = false;
+    notifyListeners();
+    return null;
+  }
 }

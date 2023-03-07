@@ -73,10 +73,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                             Provider.of<AdminService>(context, listen: false);
                         adminService.asignarCicloaTarea(
                             tarea.id!, adminForm.cicloId);
-                        setState(() {
-                          tareasSinCiclo.removeAt(index);
-                        });
-
+                        tareasSinCiclo.removeAt(index);
                         customToast('Tarea publicada correctamente', context);
                         adminForm.cicloId = 0;
                       }

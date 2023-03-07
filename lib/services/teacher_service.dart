@@ -30,7 +30,7 @@ class TeacherService extends ChangeNotifier {
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
     var tareasUser = TareasDelCiclo.fromJson(decodedResp);
     for (var i in tareasUser.tareasDelCiclo!) {
-      if (i.grade == '0.00') {
+      if (i.grade == null) {
         tareasProf.add(i);
       }
     }
@@ -58,7 +58,7 @@ class TeacherService extends ChangeNotifier {
 
     var tareasUser = TareasDelCiclo.fromJson(decodedResp);
     for (var i in tareasUser.tareasDelCiclo!) {
-      if (i.grade != '0.00') {
+      if (i.grade != null) {
         tareasProf.add(i);
       }
     }

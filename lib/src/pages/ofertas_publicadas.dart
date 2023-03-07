@@ -20,11 +20,14 @@ class OfertasPublicadasPage extends StatefulWidget {
 class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
   List<bool> estadoSelecionado = <bool>[true, false, false];
   List<TareaDelCiclo> listaOfertasPublicadas = [];
+  List<TareaDelCiclo> aux = [];
+
   obtenerTareasSinDificultad() async {
     final teacherService = Provider.of<TeacherService>(context, listen: false);
     await teacherService.obtenerTareasPublicadasDeUnCiclo();
     setState(() {
       listaOfertasPublicadas = teacherService.tareasProf;
+      aux = listaOfertasPublicadas;
     });
   }
 
@@ -43,6 +46,9 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
     }
     return Column(
       children: [
+        SizedBox(
+          height: 10,
+        ),
         ToggleButtons(
           direction: Axis.horizontal,
           onPressed: (int index) {
@@ -50,6 +56,28 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
               // The button that is tapped is set to true, and the others to false.
               for (int i = 0; i < estado.length; i++) {
                 estadoSelecionado[i] = i == index;
+                switch (index) {
+                  case 1:
+                    setState(() {
+                      listaOfertasPublicadas = aux;
+                      listaOfertasPublicadas = listaOfertasPublicadas
+                          .where((element) => element.completionDate == null)
+                          .toList();
+                    });
+                    break;
+                  case 2:
+                    setState(() {
+                      listaOfertasPublicadas = aux;
+                      listaOfertasPublicadas = listaOfertasPublicadas
+                          .where((element) => element.completionDate != null)
+                          .toList();
+                    });
+                    break;
+                  default:
+                    setState(() {
+                      listaOfertasPublicadas = aux;
+                    });
+                }
               }
             });
           },
@@ -69,20 +97,33 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
             child: ListView(
           children: [
             ...listaOfertasPublicadas
-                .map((tarea) => ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, "ofertaconfig",
-                            arguments: tarea);
-                      },
-                      title: Row(
-                        children: [
-                          Text(tarea.title.toString()),
-                          const Spacer(),
-                          const Text('falta info Api'),
-                          const Icon(Icons.person_outline)
-                        ],
+                .map((tarea) => Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: ListTile(
+                        tileColor: tarea.completionDate != null
+                            ? Colors.green[50]
+                            : Colors.yellow[50],
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                width: 1,
+                                color: tarea.completionDate != null
+                                    ? Colors.green
+                                    : Colors.yellow)),
+                        onTap: () {
+                          Navigator.pushReplacementNamed(
+                              context, "ofertaconfig",
+                              arguments: tarea);
+                        },
+                        title: Row(
+                          children: [
+                            Text(tarea.title.toString()),
+                            const Spacer(),
+                            const Text('falta info Api'),
+                            const Icon(Icons.person_outline)
+                          ],
+                        ),
+                        trailing: const Icon(Icons.keyboard_arrow_right),
                       ),
-                      trailing: const Icon(Icons.keyboard_arrow_right),
                     ))
                 .toList()
           ],
