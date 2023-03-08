@@ -363,7 +363,8 @@ class _CardPersonalizada extends StatelessWidget {
                 children: [
                   tarea.imagen != null
                       ? Image.network(
-                          tarea.imagen.toString(),
+                          'https://goswapp.allsites.es/storage/app/public/' +
+                              tarea.imagen.toString(),
                           fit: BoxFit.cover,
                           width: 150,
                           height: 150,

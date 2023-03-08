@@ -14,6 +14,7 @@ class OfertasAdminScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         title: const Center(
           child: Text('Menú Admin'),
         ),

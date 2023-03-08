@@ -98,6 +98,7 @@ class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
             bottom: 15,
           ),
           child: FloatingActionButton(
+            backgroundColor: Colors.blueGrey,
             onPressed: () {
               Navigator.of(context).pushNamed('crearProfesor');
             },

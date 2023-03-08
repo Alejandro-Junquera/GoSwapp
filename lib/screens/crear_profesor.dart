@@ -12,7 +12,11 @@ class CrearProfresorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final nuevoProfForm = Provider.of<NuevoProfProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear Profesor')),
+      backgroundColor: Colors.blueGrey[700],
+      appBar: AppBar(
+        title: const Text('Crear Profesor'),
+        backgroundColor: Colors.blueGrey[800],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

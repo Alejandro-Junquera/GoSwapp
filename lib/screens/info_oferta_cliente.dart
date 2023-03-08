@@ -26,6 +26,7 @@ class _InfoOfertaClienteScreenState extends State<InfoOfertaClienteScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         title: const Text('Información'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),

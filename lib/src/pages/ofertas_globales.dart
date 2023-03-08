@@ -82,10 +82,19 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                             aspectRatio: 1,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg',
-                                fit: BoxFit.cover,
-                              ),
+                              child: tarea.imagen != null
+                                  ? Image.network(
+                                      'https://goswapp.allsites.es/storage/app/public/' +
+                                          tarea.imagen.toString(),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/no-image.jpg',
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      height: 250,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           )),
                     ),

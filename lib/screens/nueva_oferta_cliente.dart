@@ -23,6 +23,7 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
     final nuevaTareaFormProvider = Provider.of<NuevaTareaFormProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         title: const Text('Nueva Oferta'),
       ),
       body: Stack(children: [

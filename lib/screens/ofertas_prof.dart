@@ -13,6 +13,7 @@ class OfertasProfScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         title: const Center(
           child: Text('Menú Profesor'),
         ),
@@ -26,6 +27,13 @@ class OfertasProfScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(context, 'login');
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'perfilProfesor');
+              },
+              icon: Icon(Icons.info))
+        ],
       ),
       body: const _Ofertas(),
       bottomNavigationBar: const BottomNavigationBarPersonalizado(),

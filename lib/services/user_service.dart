@@ -49,36 +49,30 @@ class UserService extends ChangeNotifier {
     String? idUser = await AuthService().readId();
     String? token = await AuthService().readToken();
 
-    List<int> imageBytes = await newPictureFile!.readAsBytes();
-    String base64Image = base64Encode(imageBytes);
-    print(base64Image);
-
-    final Map<String, dynamic> nuevaTarea = {
+    final Map<String, String> nuevaTarea = {
       'title': title,
       'description': description,
       'client_address': address,
       'client_phone': phone,
-      'imagen': base64Image,
-      'user_id': idUser,
+      'user_id': idUser.toString(),
     };
 
     final url = Uri.http(_baseUrl, '/public/api/tasks');
+    final request = http.MultipartRequest('POST', url)
+      ..headers['Authorization'] = 'Bearer $token'
+      ..headers['Accept'] = 'application/json'
+      ..fields.addAll(nuevaTarea)
+      ..files.add(
+          await http.MultipartFile.fromPath('imagen', newPictureFile!.path));
+
     isLoading = true;
     notifyListeners();
-    final resp = await http.post(
-      url,
-      headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        "Authorization": 'Bearer $token',
-      },
-      body: json.encode(nuevaTarea),
-    );
-    final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    print(decodedResp);
+    final response = await http.Response.fromStream(await request.send());
+    print(response.body);
+
     isLoading = false;
     notifyListeners();
-    return decodedResp;
+    return null;
   }
 
   void updateImage(String path) {

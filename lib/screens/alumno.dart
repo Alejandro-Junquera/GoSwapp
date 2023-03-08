@@ -31,6 +31,11 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
             SizedBox(
               width: 5,
             ),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, 'perfilAlumno');
+                },
+                icon: Icon(Icons.info))
           ]),
       body: Column(
         children: [

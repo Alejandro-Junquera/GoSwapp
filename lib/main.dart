@@ -84,8 +84,9 @@ class MyApp extends StatelessWidget {
             'alumno': (_) => const AlumnoScreen(),
             'infoOfertaCliente': (_) => const InfoOfertaClienteScreen(),
             'googleMap': (_) => const GoogleMapScreen(),
-
-            //'register': (_) => RegisterScreen(),
+            'perfilProfesor': (_) => const ProfesorPerfilScreen(),
+            'perfilAlumno': (_) => const AlumnoPerfilScreen(),
+            'perfilCliente': (_) => const ClientePerfilScreen(),
           },
           theme: ThemeData.light()
               .copyWith(scaffoldBackgroundColor: Colors.grey[200])),

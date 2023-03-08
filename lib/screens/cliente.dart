@@ -67,6 +67,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
     }
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         title: const Text('Menu Usuario'),
         leading: IconButton(
           icon: const Icon(Icons.logout),
@@ -78,6 +79,13 @@ class _ClienteScreenState extends State<ClienteScreen> {
             Navigator.pushReplacementNamed(context, 'login');
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'perfilCliente');
+              },
+              icon: Icon(Icons.info))
+        ],
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -124,15 +132,26 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                   tag: tarea.id!,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image.network(
-                                      tarea.imagen == ''
-                                          ? 'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg'
-                                          : 'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg',
-                                      width: MediaQuery.of(context).size.width *
-                                          0.5,
-                                      height: 250,
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: tarea.imagen != null
+                                        ? Image.network(
+                                            'https://goswapp.allsites.es/storage/app/public/' +
+                                                tarea.imagen.toString(),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            height: 250,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            'assets/images/no-image.jpg',
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            height: 250,
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                 ),
                               ),
@@ -193,6 +212,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
       floatingActionButton: Visibility(
         visible: _isVisible,
         child: FloatingActionButton(
+          backgroundColor: Colors.blueGrey,
           onPressed: () =>
               Navigator.of(context).pushNamed('nuevaOfertaCliente'),
           tooltip: 'Añadir',
@@ -202,15 +222,4 @@ class _ClienteScreenState extends State<ClienteScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-}
-
-//TODOO:BORRAR MAS TARDE
-class _Oferta {
-  String titulo;
-  String descripcion;
-  String imagen;
-  String categoria;
-  String estado;
-  _Oferta(
-      this.titulo, this.descripcion, this.imagen, this.categoria, this.estado);
 }
