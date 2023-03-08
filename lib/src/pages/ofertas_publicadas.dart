@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/screens/oferta_config.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 import '../../models/models.dart';
@@ -110,9 +111,12 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
                                     ? Colors.green
                                     : Colors.yellow)),
                         onTap: () {
-                          Navigator.pushReplacementNamed(
-                              context, "ofertaconfig",
-                              arguments: tarea);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    OfertaConfigScreen(tarea: tarea),
+                              ));
                         },
                         title: Row(
                           children: [

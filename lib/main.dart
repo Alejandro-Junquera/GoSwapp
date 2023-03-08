@@ -77,7 +77,6 @@ class MyApp extends StatelessWidget {
             'login': (_) => const LoginScreen(),
             'registro': (_) => const RegistroScreen(),
             'initProf': (_) => const OfertasProfScreen(),
-            'ofertaconfig': (_) => const OfertaConfigScreen(),
             'cliente': (_) => const ClienteScreen(),
             'nuevaOfertaCliente': (_) => const NuevaOfertaClienteScreen(),
             'admin': (_) => const OfertasAdminScreen(),

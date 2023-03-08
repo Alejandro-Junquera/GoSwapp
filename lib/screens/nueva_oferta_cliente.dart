@@ -239,11 +239,11 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
                                   context,
                                   listen: false);
                               await userService.crearNuevaTareaUsuario(
-                                  nuevaTareaFormProvider.title,
-                                  nuevaTareaFormProvider.description,
-                                  nuevaTareaFormProvider.adress,
-                                  nuevaTareaFormProvider.phone,
-                                  image);
+                                nuevaTareaFormProvider.title,
+                                nuevaTareaFormProvider.description,
+                                nuevaTareaFormProvider.adress,
+                                nuevaTareaFormProvider.phone,
+                              );
                               // ignore: use_build_context_synchronously
                               Navigator.of(context)
                                   .pushReplacementNamed('cliente');
@@ -283,6 +283,7 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
               setState(() {
                 image = photo.path;
               });
+              print(photo.path);
 
               userService.updateImage(photo.path);
             },

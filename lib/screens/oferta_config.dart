@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/models/models.dart';
@@ -6,13 +8,29 @@ import 'package:url_launcher/url_launcher.dart';
 import '../services/services.dart';
 
 class OfertaConfigScreen extends StatefulWidget {
-  const OfertaConfigScreen({super.key});
+  final TareaDelCiclo tarea;
+  const OfertaConfigScreen({super.key, required this.tarea});
 
   @override
   State<OfertaConfigScreen> createState() => _OfertaConfigScreenState();
 }
 
 class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
+  List<SolicitudTarea> solicitudes = [];
+  obtenerSolicitudes(int taskId) async {
+    final teacherService = Provider.of<TeacherService>(context, listen: false);
+    await teacherService.obtenerSolicitudesAlmunosTarea(taskId);
+    setState(() {
+      solicitudes = teacherService.solicitudes;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerSolicitudes(widget.tarea.id!);
+  }
+
   whatsapp(String phone, String tarea) async {
     var contact = "+34$phone";
     var androidUrl =
@@ -21,16 +39,10 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
     await launchUrl(Uri.parse(androidUrl));
   }
 
-  final listaAlumnos = [
-    _Alumno("ALBERTO", "IEA", false),
-    _Alumno("ALEJANDRO", "IEA", false),
-    _Alumno("JAVIER", "IEA", true),
-  ];
   List<bool> isSelected = [false, false];
 
   @override
   Widget build(BuildContext context) {
-    final tarea = ModalRoute.of(context)!.settings.arguments as TareaDelCiclo;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Oferta"),
@@ -40,7 +52,8 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                   Navigator.pushReplacementNamed(context, 'initProf')),
           actions: [
             IconButton(
-                onPressed: () => whatsapp(tarea.clientPhone!, tarea.title!),
+                onPressed: () =>
+                    whatsapp(widget.tarea.clientPhone!, widget.tarea.title!),
                 icon: Icon(Icons.phone_android))
           ],
         ),
@@ -49,78 +62,101 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
             children: [
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: _CardPersonalizada(tarea: tarea),
+                child: _CardPersonalizada(tarea: widget.tarea),
               ),
-              ExpansionTile(
-                initiallyExpanded: true,
-                title: const Text("Lista de alumnos interesados"),
-                children: [
-                  SingleChildScrollView(
-                    child: SizedBox(
-                      height: 250,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: listaAlumnos.length,
-                        itemBuilder: (context, index) {
-                          final alumno = listaAlumnos[index];
+              widget.tarea.completionDate == null
+                  ? ExpansionTile(
+                      initiallyExpanded: true,
+                      title: const Text("Lista de alumnos interesados"),
+                      children: [
+                        SingleChildScrollView(
+                          child: SizedBox(
+                            height: 250,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: solicitudes.length,
+                              itemBuilder: (context, index) {
+                                final alumno = solicitudes[index];
 
-                          Color selectedBorderColor = Colors.white;
-                          Color fillColor = Colors.white;
+                                Color selectedBorderColor = Colors.white;
+                                Color fillColor = Colors.white;
 
-                          if (!alumno.post) {
-                            isSelected = [false, true];
-                            selectedBorderColor = Colors.green[700] as Color;
-                            fillColor = Colors.green[100] as Color;
-                          } else {
-                            isSelected = [true, false];
-                            selectedBorderColor = Colors.red[700] as Color;
-                            fillColor = Colors.red[100] as Color;
-                          }
+                                if (alumno.assignedAt != null) {
+                                  isSelected = [false, true];
+                                  selectedBorderColor =
+                                      Colors.green[700] as Color;
+                                  fillColor = Colors.green[100] as Color;
+                                } else {
+                                  isSelected = [true, false];
+                                  selectedBorderColor =
+                                      Colors.red[700] as Color;
+                                  fillColor = Colors.red[100] as Color;
+                                }
 
-                          return ListTile(
-                            title: Row(
-                              children: [
-                                Text(alumno.nombre),
-                                const Spacer(),
-                                ToggleButtons(
-                                  selectedBorderColor: selectedBorderColor,
-                                  fillColor: fillColor,
-                                  direction: Axis.horizontal,
-                                  isSelected: isSelected,
-                                  onPressed: (int index) {
-                                    setState(() {
-                                      if (index == 0) {
-                                        alumno.post = true;
-                                      } else {
-                                        alumno.post = false;
-                                      }
-                                    });
-                                  },
-                                  children: const [
-                                    Icon(
-                                      Icons.cancel,
-                                      color: Colors.red,
-                                    ),
-                                    Icon(
-                                      Icons.done,
-                                      color: Colors.green,
-                                    ),
-                                  ],
-                                )
-                              ],
+                                return ListTile(
+                                  title: Row(
+                                    children: [
+                                      Text(alumno.studentName! +
+                                          ' ' +
+                                          alumno.surname!),
+                                      const Spacer(),
+                                      ToggleButtons(
+                                        selectedBorderColor:
+                                            selectedBorderColor,
+                                        fillColor: fillColor,
+                                        direction: Axis.horizontal,
+                                        isSelected: isSelected,
+                                        onPressed: (int index) async {
+                                          final teacherService =
+                                              Provider.of<TeacherService>(
+                                                  context,
+                                                  listen: false);
+
+                                          if (index == 0) {
+                                            await teacherService
+                                                .desAsignarTarea(alumno.id!);
+                                            setState(() {
+                                              alumno.assignedAt = 'Fecha';
+                                            });
+                                            obtenerSolicitudes(
+                                                widget.tarea.id!);
+                                          } else {
+                                            await teacherService
+                                                .asignarTarea(alumno.id!);
+                                            setState(() {
+                                              alumno.assignedAt = null;
+                                            });
+                                            obtenerSolicitudes(
+                                                widget.tarea.id!);
+                                          }
+                                        },
+                                        children: const [
+                                          Icon(
+                                            Icons.cancel,
+                                            color: Colors.red,
+                                          ),
+                                          Icon(
+                                            Icons.done,
+                                            color: Colors.green,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  subtitle:
+                                      Text(alumno.cicleStudent.toString()),
+                                );
+                              },
                             ),
-                            subtitle: Text(alumno.curso),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(),
               Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: tarea.comment != null
+                  child: widget.tarea.comment != null
                       ? Card(
                           color: const Color.fromARGB(255, 217, 217, 217),
                           shape: RoundedRectangleBorder(
@@ -144,7 +180,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
                                     child: Text(
-                                      tarea.comment.toString(),
+                                      widget.tarea.comment.toString(),
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   ),
@@ -165,59 +201,138 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
               const SizedBox(
                 height: 30,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MaterialButton(
-                    onPressed: () {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                title: Text('¿Eliminar tarea ${tarea.title}?'),
-                                content: const Text('¿Estas seguro?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('No'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final teacherService =
-                                          Provider.of<TeacherService>(context,
-                                              listen: false);
-                                      teacherService
-                                          .eliminarUnaTarea(tarea.id!);
+              widget.tarea.completionDate == null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        MaterialButton(
+                          onPressed: () {
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: Text(
+                                          '¿Eliminar tarea ${widget.tarea.title}?'),
+                                      content: const Text('¿Estas seguro?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('No'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final teacherService =
+                                                Provider.of<TeacherService>(
+                                                    context,
+                                                    listen: false);
+                                            teacherService.eliminarUnaTarea(
+                                                widget.tarea.id!);
 
-                                      Navigator.pushReplacementNamed(
-                                          context, 'initProf');
-                                    },
-                                    child: const Text('Si'),
-                                  ),
-                                ],
-                              ));
-                    },
-                    color: Colors.red,
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: const Text(
-                          'Eliminar',
-                          textAlign: TextAlign.center,
-                        )),
-                  ),
-                  MaterialButton(
-                    onPressed: () {},
-                    color: Colors.grey,
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: const Text(
-                          'Archivar',
-                          textAlign: TextAlign.center,
-                        )),
-                  ),
-                ],
-              )
+                                            Navigator.pushReplacementNamed(
+                                                context, 'initProf');
+                                          },
+                                          child: const Text('Si'),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          color: Colors.red,
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: const Text(
+                                'Eliminar',
+                                textAlign: TextAlign.center,
+                              )),
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: Text(
+                                          'Una vez finalizada la tarea no podrás asignar más alumnos'),
+                                      content: const Text('¿Estas seguro?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('No'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final teacherService =
+                                                Provider.of<TeacherService>(
+                                                    context,
+                                                    listen: false);
+                                            teacherService.finalizarTarea(
+                                                widget.tarea.id!);
+                                            setState(() {
+                                              widget.tarea.completionDate = '-';
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Si'),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          color: Colors.grey,
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: const Text(
+                                'Finalizar tarea',
+                                textAlign: TextAlign.center,
+                              )),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MaterialButton(
+                          onPressed: () {
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: Text(
+                                          '¿Eliminar tarea ${widget.tarea.title}?'),
+                                      content: const Text('¿Estas seguro?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('No'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final teacherService =
+                                                Provider.of<TeacherService>(
+                                                    context,
+                                                    listen: false);
+                                            teacherService.eliminarUnaTarea(
+                                                widget.tarea.id!);
+
+                                            Navigator.pushReplacementNamed(
+                                                context, 'initProf');
+                                          },
+                                          child: const Text('Si'),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          color: Colors.red,
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: const Text(
+                                'Eliminar',
+                                textAlign: TextAlign.center,
+                              )),
+                        ),
+                      ],
+                    )
             ],
           ),
         ));
@@ -319,12 +434,4 @@ class _CardPersonalizada extends StatelessWidget {
       ),
     );
   }
-}
-
-//TODO:ELIMINAR EN UN FUTURO
-class _Alumno {
-  String nombre;
-  String curso;
-  bool post;
-  _Alumno(this.nombre, this.curso, this.post);
 }

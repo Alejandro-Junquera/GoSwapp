@@ -45,18 +45,23 @@ class UserService extends ChangeNotifier {
     String description,
     String address,
     String phone,
-    String imagen,
   ) async {
     String? idUser = await AuthService().readId();
     String? token = await AuthService().readToken();
+
+    List<int> imageBytes = await newPictureFile!.readAsBytes();
+    String base64Image = base64Encode(imageBytes);
+    print(base64Image);
+
     final Map<String, dynamic> nuevaTarea = {
       'title': title,
       'description': description,
       'client_address': address,
       'client_phone': phone,
-      'imagen': imagen,
+      'imagen': base64Image,
       'user_id': idUser,
     };
+
     final url = Uri.http(_baseUrl, '/public/api/tasks');
     isLoading = true;
     notifyListeners();
