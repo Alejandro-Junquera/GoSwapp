@@ -7,6 +7,7 @@ import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
 
 class NuevaOfertaClienteScreen extends StatefulWidget {
   const NuevaOfertaClienteScreen({super.key});
@@ -25,6 +26,9 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[800],
         title: const Text('Nueva Oferta'),
+        leading: IconButton(
+            onPressed: () => Navigator.pushReplacementNamed(context, 'cliente'),
+            icon: Icon(Icons.arrow_back)),
       ),
       body: Stack(children: [
         Container(
@@ -236,24 +240,37 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
                             color: Colors.blueGrey[600],
                             onPressed: () async {
                               FocusScope.of(context).unfocus();
+                              if (!nuevaTareaFormProvider.isValidForm()) return;
+                              QuickAlert.show(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  type: QuickAlertType.loading,
+                                  title: 'Procesando',
+                                  confirmBtnColor: Colors.blueGrey,
+                                  text: 'Subiendo imagen al servidor',
+                                  confirmBtnText: 'Vale');
                               final userService = Provider.of<UserService>(
                                   context,
                                   listen: false);
+
                               await userService.crearNuevaTareaUsuario(
                                 nuevaTareaFormProvider.title,
                                 nuevaTareaFormProvider.description,
                                 nuevaTareaFormProvider.adress,
                                 nuevaTareaFormProvider.phone,
                               );
+                              Navigator.pop(context);
+
                               // ignore: use_build_context_synchronously
-                              Navigator.of(context)
-                                  .pushReplacementNamed('cliente');
+                              Navigator.pushReplacementNamed(
+                                  context, 'cliente');
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 80, vertical: 15),
                               child: const Text(
                                 'Guardar',
+
                                 //loginForm.isLoading ? 'Wait' : 'Submit',
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -284,8 +301,6 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
               setState(() {
                 image = photo.path;
               });
-              print(photo.path);
-
               userService.updateImage(photo.path);
             },
             color: Colors.white,

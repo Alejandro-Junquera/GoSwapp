@@ -48,7 +48,8 @@ class UserService extends ChangeNotifier {
   ) async {
     String? idUser = await AuthService().readId();
     String? token = await AuthService().readToken();
-
+    isLoading = true;
+    notifyListeners();
     final Map<String, String> nuevaTarea = {
       'title': title,
       'description': description,
@@ -65,8 +66,6 @@ class UserService extends ChangeNotifier {
       ..files.add(
           await http.MultipartFile.fromPath('imagen', newPictureFile!.path));
 
-    isLoading = true;
-    notifyListeners();
     final response = await http.Response.fromStream(await request.send());
     print(response.body);
 

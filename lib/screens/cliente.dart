@@ -214,7 +214,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
         child: FloatingActionButton(
           backgroundColor: Colors.blueGrey,
           onPressed: () =>
-              Navigator.of(context).pushNamed('nuevaOfertaCliente'),
+              Navigator.pushReplacementNamed(context, 'nuevaOfertaCliente'),
           tooltip: 'Añadir',
           child: const Icon(Icons.add),
         ),

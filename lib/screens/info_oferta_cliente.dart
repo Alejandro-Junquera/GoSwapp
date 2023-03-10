@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:animate_do/animate_do.dart';
+import 'package:quickalert/quickalert.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 import 'package:provider/provider.dart';
@@ -18,244 +17,199 @@ class InfoOfertaClienteScreen extends StatefulWidget {
 
 class _InfoOfertaClienteScreenState extends State<InfoOfertaClienteScreen> {
   double aux = 0;
-  bool launchAnimation = false;
   @override
   Widget build(BuildContext context) {
     final tarea = ModalRoute.of(context)!.settings.arguments as TareasDataUser;
     final comentarioFormProvider = Provider.of<ComentarioFormProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey[800],
-        title: const Text('Información'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed('cliente');
-          },
-        ),
-      ),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
-                child: Stack(children: [
-                  Positioned(
-                    right: 0,
-                    top: 100,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.24,
-                      color: const Color.fromARGB(169, 212, 212, 212),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 5),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.35,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.40,
+                child: tarea.imagen != null
+                    ? Image.network(
+                        'https://goswapp.allsites.es/storage/app/public/' +
+                            tarea.imagen.toString(),
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/images/no-image.jpg',
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 60,
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(
+                          blurStyle: BlurStyle.outer,
+                          color: Colors.black.withOpacity(0.1),
+                          offset: Offset(0.0, 0.0), //(x,y)
+                          blurRadius: 16.0,
+                        )
+                      ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            child: Text(
+                              tarea.title.toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 26, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    tarea.title.toString(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                    maxLines: 5,
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Text(tarea.createdAt.toString())
+                        ],
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 0,
-                    child: Hero(
-                        tag: 1,
-                        child: Container(
-                          decoration: const BoxDecoration(boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 25,
-                            )
-                          ]),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              tarea.imagen == ''
-                                  ? 'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg'
-                                  : 'https://static.vecteezy.com/system/resources/previews/005/337/799/non_2x/icon-image-not-found-free-vector.jpg',
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 250,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )),
-                  ),
-                ]),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.1),
-                child: Container(
-                    color: const Color.fromARGB(169, 212, 212, 212),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Descripción',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                              height: 80,
-                              child: Text(tarea.description.toString())),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Visibility(
-                            visible: true,
-                            child: SizedBox(
-                              child: Column(
-                                children: [
-                                  tarea.completionDate != null
-                                      ? Text('Valoración del Alumno',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))
-                                      : FadeIn(
-                                          child: Text(
-                                              'Se podrá realizar una valoración de la tarea cuando esta finalice',
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
-                                  const SizedBox(
-                                    height: 15,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: const Text(
+                                    'Descripcion',
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  FadeOut(
-                                    animate: launchAnimation,
-                                    child: Visibility(
-                                      visible: tarea.completionDate != null
-                                          ? true
-                                          : false,
-                                      child: Form(
-                                          key: comentarioFormProvider.formKey,
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          child: Column(
-                                            children: [
-                                              RatingBar.builder(
-                                                ignoreGestures:
-                                                    tarea.clientRating != null
-                                                        ? true
-                                                        : false,
-                                                initialRating:
-                                                    tarea.clientRating != null
-                                                        ? double.parse(
-                                                            tarea.clientRating!)
-                                                        : 0,
-                                                minRating: 1,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: false,
-                                                itemCount: 5,
-                                                itemPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 4.0),
-                                                itemBuilder: (context, _) =>
-                                                    const Icon(Icons.favorite,
-                                                        color: Colors.red),
-                                                onRatingUpdate: (rating) {
-                                                  aux = rating;
-                                                  comentarioFormProvider
-                                                      .client_rating = rating;
-                                                },
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  tarea.description.toString(),
+                                  textAlign: TextAlign.justify,
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                const Text(
+                                  'Valoración del Alumno',
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Form(
+                                    key: comentarioFormProvider.formKey,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    child: Column(
+                                      children: [
+                                        RatingBar.builder(
+                                          ignoreGestures:
+                                              tarea.clientRating != null
+                                                  ? true
+                                                  : false,
+                                          initialRating:
+                                              tarea.clientRating != null
+                                                  ? double.parse(
+                                                      tarea.clientRating!)
+                                                  : 0,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: false,
+                                          itemCount: 5,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 4.0),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(Icons.favorite,
+                                                  color: Colors.red),
+                                          onRatingUpdate: (rating) {
+                                            aux = rating;
+                                            comentarioFormProvider
+                                                .client_rating = rating;
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        TextFormField(
+                                            initialValue: tarea.comment != null
+                                                ? tarea.comment
+                                                : '',
+                                            readOnly: tarea.comment != null
+                                                ? true
+                                                : false,
+                                            decoration: const InputDecoration(
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.blueGrey),
                                               ),
-                                              const SizedBox(
-                                                height: 30,
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 2),
                                               ),
-                                              TextFormField(
-                                                  initialValue:
-                                                      tarea.comment != null
-                                                          ? tarea.comment
-                                                          : '',
-                                                  readOnly:
-                                                      tarea.comment != null
-                                                          ? true
-                                                          : false,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color:
-                                                              Colors.blueGrey),
-                                                    ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.blue,
-                                                          width: 2),
-                                                    ),
-                                                    labelText: 'Comentario',
-                                                    labelStyle: TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
-                                                  maxLines: 5,
-                                                  onChanged: (value) {
-                                                    comentarioFormProvider
-                                                        .comment = value;
-                                                  },
-                                                  validator: (value) {
-                                                    return (value != null &&
-                                                            value.length >= 11)
-                                                        ? null
-                                                        : 'El comentario tiene que tener mas de 10 letras';
-                                                  }),
-                                              const SizedBox(
-                                                height: 50,
-                                              ),
-                                              Visibility(
-                                                visible: tarea.comment != null
-                                                    ? false
-                                                    : true,
-                                                child: MaterialButton(
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  disabledColor: Colors.grey,
-                                                  elevation: 0,
-                                                  color: Colors.blueGrey[600],
-                                                  onPressed: () {
+                                              labelText: 'Comentario',
+                                              labelStyle:
+                                                  TextStyle(color: Colors.grey),
+                                            ),
+                                            maxLines: 5,
+                                            onChanged: (value) {
+                                              comentarioFormProvider.comment =
+                                                  value;
+                                            },
+                                            validator: (value) {
+                                              return (value != null &&
+                                                      value.length >= 11)
+                                                  ? null
+                                                  : 'El comentario tiene que tener mas de 10 letras';
+                                            }),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        tarea.comment == null
+                                            ? MaterialButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                disabledColor: Colors.grey,
+                                                elevation: 0,
+                                                color: Colors.blueGrey[600],
+                                                onPressed: () {
+                                                  if (tarea.completionDate !=
+                                                      null) {
                                                     FocusScope.of(context)
                                                         .unfocus();
                                                     if (!comentarioFormProvider
                                                         .isValidForm()) return;
                                                     if (aux == 0) {
-                                                      customToast(
-                                                          'Puntue el trabajo del cliente',
-                                                          context);
+                                                      QuickAlert.show(
+                                                          context: context,
+                                                          barrierDismissible:
+                                                              false,
+                                                          type: QuickAlertType
+                                                              .warning,
+                                                          title: 'Lo sentimos',
+                                                          confirmBtnColor:
+                                                              Colors.blueGrey,
+                                                          text:
+                                                              'Debe puntuar el trabajo del alumno',
+                                                          confirmBtnText:
+                                                              'Vale');
                                                     } else {
                                                       final userService =
                                                           Provider.of<
@@ -268,67 +222,89 @@ class _InfoOfertaClienteScreenState extends State<InfoOfertaClienteScreen> {
                                                               .client_rating,
                                                           comentarioFormProvider
                                                               .comment);
-                                                      customToast(
-                                                          'Valoracion publicada correctamente',
-                                                          context);
                                                       setState(() {
-                                                        launchAnimation =
-                                                            !launchAnimation;
+                                                        tarea.comment =
+                                                            comentarioFormProvider
+                                                                .comment;
+                                                        tarea.clientRating =
+                                                            aux.toString();
                                                       });
+                                                      QuickAlert.show(
+                                                          context: context,
+                                                          barrierDismissible:
+                                                              false,
+                                                          type: QuickAlertType
+                                                              .success,
+                                                          title: 'Completado',
+                                                          confirmBtnColor:
+                                                              Colors.blueGrey,
+                                                          text:
+                                                              'Comentario publicado correctamente',
+                                                          confirmBtnText:
+                                                              'Vale');
                                                     }
-                                                  },
-                                                  child: Container(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 80,
-                                                        vertical: 15),
-                                                    child: const Text(
-                                                      'Comentar',
-                                                      //loginForm.isLoading ? 'Wait' : 'Submit',
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
+                                                  } else {
+                                                    QuickAlert.show(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            false,
+                                                        type:
+                                                            QuickAlertType.info,
+                                                        title: 'Informacion',
+                                                        confirmBtnColor:
+                                                            Colors.blueGrey,
+                                                        text:
+                                                            'No puedes comentar la tarea hasta que finalice',
+                                                        confirmBtnText: 'Vale');
+                                                  }
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 80,
+                                                      vertical: 15),
+                                                  child: const Text(
+                                                    'Comentar',
+                                                    //loginForm.isLoading ? 'Wait' : 'Submit',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          )),
-                                    ),
-                                  )
-                                ],
-                              ),
+                                              )
+                                            : SizedBox(),
+                                        const SizedBox(
+                                          height: 20,
+                                        )
+                                      ],
+                                    )),
+                              ],
                             ),
-                          )
-                        ],
+                          ),
+                        ),
                       ),
-                    )),
-              )
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  void customToast(String message, BuildContext context) {
-    showToast(
-      message,
-      textStyle: const TextStyle(
-        fontSize: 14,
-        wordSpacing: 0.1,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 15),
+        child: FloatingActionButton(
+          elevation: 10,
+          backgroundColor: Colors.white,
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed('cliente');
+          },
+        ),
       ),
-      textPadding: const EdgeInsets.all(23),
-      fullWidth: true,
-      toastHorizontalMargin: 25,
-      borderRadius: BorderRadius.circular(15),
-      backgroundColor: Colors.blueGrey[500],
-      alignment: Alignment.bottomCenter,
-      position: StyledToastPosition.top,
-      duration: const Duration(seconds: 3),
-      animation: StyledToastAnimation.slideFromTop,
-      context: context,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
     );
   }
 }

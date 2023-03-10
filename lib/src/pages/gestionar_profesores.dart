@@ -66,12 +66,12 @@ class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
                   ActionPane(motion: const DrawerMotion(), children: [
                 SlidableAction(
                   onPressed: (context) {},
-                  backgroundColor: Colors.red,
+                  backgroundColor: Color.fromARGB(255, 190, 51, 41),
                   icon: Icons.delete,
                 ),
                 SlidableAction(
                   onPressed: (context) {},
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color.fromARGB(255, 27, 110, 177),
                   icon: Icons.edit,
                 ),
               ]),

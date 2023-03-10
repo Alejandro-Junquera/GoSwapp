@@ -78,7 +78,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                         adminForm.cicloId = 0;
                       }
                     },
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromARGB(255, 15, 161, 20),
                     icon: Icons.check,
                   ),
                   SlidableAction(
@@ -115,52 +115,140 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                                 ],
                               ));
                     },
-                    backgroundColor: Colors.red,
+                    backgroundColor: Color.fromARGB(255, 190, 51, 41),
                     icon: Icons.delete,
                   ),
                 ]),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.blueGrey[200],
+                      color: Colors.grey[400],
                       border: Border.all(color: Colors.blueGrey, width: 2),
                       borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(10),
                           topRight: Radius.circular(10))),
-                  height: 240,
+                  height: 140,
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text('${tarea.title}'),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(7.0),
-                        child: SizedBox(
-                          height: 95,
-                          child: Text(
-                            tarea.description.toString(),
-                            textAlign: TextAlign.justify,
-                          ),
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('${tarea.title}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                )),
+                            IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        backgroundColor: Colors.blueGrey[200],
+                                        title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              tarea.title.toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 30),
+                                              child: Text(
+                                                tarea.createdAt.toString(),
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        content: Text(
+                                          tarea.description.toString(),
+                                        ),
+                                        actions: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.blueGrey[600],
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      60))),
+                                                  height: 60,
+                                                  width: 60,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 15, top: 15),
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.cancel_outlined,
+                                                        size: 30,
+                                                        color: Colors.white60,
+                                                      ),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.article,
+                                  color: Colors.grey[600],
+                                  size: 35,
+                                  shadows: [
+                                    Shadow(
+                                        color: Colors.grey[300]!,
+                                        offset: Offset.fromDirection(20))
+                                  ],
+                                )),
+                          ],
                         ),
                       ),
                       Form(
-                        child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.blueGrey))),
-                          hint: const Text('Select a cicle'),
-                          items: ciclos.map((e) {
-                            return DropdownMenuItem(
-                              value: e.id,
-                              child: Text(e.name.toString()),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            adminForm.cicloId = value!;
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: DropdownButtonFormField(
+                            icon: Icon(Icons.book),
+                            dropdownColor: Colors.grey[300],
+                            decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.blueGrey[800]!)),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.blueGrey))),
+                            hint: const Text('Seleciona un ciclo'),
+                            items: ciclos.map((e) {
+                              return DropdownMenuItem(
+                                value: e.id,
+                                child: Text(e.name.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              adminForm.cicloId = value!;
+                            },
+                          ),
                         ),
                       )
                     ],
