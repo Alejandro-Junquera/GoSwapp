@@ -34,6 +34,20 @@ class _InfoOfertaClienteScreenState extends State<InfoOfertaClienteScreen> {
                     ? Image.network(
                         'https://goswapp.allsites.es/storage/app/public/' +
                             tarea.imagen.toString(),
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
                         fit: BoxFit.cover,
                       )
                     : Image.asset(

@@ -74,7 +74,6 @@ class AdminService extends ChangeNotifier {
       },
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    print(decodedResp);
     var profesor = Profesores.fromJson(decodedResp);
     for (var i in profesor.profesores!) {
       profesores.add(i);

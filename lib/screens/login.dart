@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/providers/providers.dart';
 import 'package:flutter_aplicacion_ganadora/src/pages/pages.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../services/services.dart';
 import '../ui/input_decorations.dart';
@@ -126,7 +126,14 @@ class _LoginForm extends StatelessWidget {
                           loginForm.email, loginForm.contrasenia);
                       if (mensaje == 'No estás autorizado') {
                         // ignore: use_build_context_synchronously
-                        customToast(mensaje!, context);
+                        QuickAlert.show(
+                            context: context,
+                            barrierDismissible: false,
+                            type: QuickAlertType.warning,
+                            title: 'Lo sentimos',
+                            confirmBtnColor: Colors.blueGrey,
+                            text: 'Email o contraseña incorrectos',
+                            confirmBtnText: 'Vale');
                       } else if (mensaje == 'admin') {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacementNamed('admin');
@@ -154,28 +161,6 @@ class _LoginForm extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void customToast(String message, BuildContext context) {
-    showToast(
-      message,
-      textStyle: const TextStyle(
-        fontSize: 14,
-        wordSpacing: 0.1,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-      textPadding: const EdgeInsets.all(23),
-      fullWidth: true,
-      toastHorizontalMargin: 25,
-      borderRadius: BorderRadius.circular(15),
-      backgroundColor: Colors.blueGrey[500],
-      alignment: Alignment.bottomCenter,
-      position: StyledToastPosition.top,
-      duration: const Duration(seconds: 3),
-      animation: StyledToastAnimation.slideFromTop,
-      context: context,
     );
   }
 }

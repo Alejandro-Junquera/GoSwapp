@@ -10,6 +10,7 @@ class AlumnoService extends ChangeNotifier {
   List<EstudianteInfo> info = [];
   List<TareasAlumnoCiclo> tareas = [];
   List<TareasAsignadasAlumno> tareasAsignadas = [];
+  List<AlumnoPerfilData> perfil = [];
   bool isLoading = true;
 
   getTareas() async {
@@ -64,5 +65,32 @@ class AlumnoService extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return null;
+  }
+
+  obtenerPerfilAlumno() async {
+    String? token = await AuthService().readToken();
+    String? cicleId = await AuthService().readCicleId();
+    final url = Uri.http(_baseUrl, '/public/api/students');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    var allAlumnos = Alumnos.fromJson(decodedResp);
+
+    for (var i in allAlumnos.estudiantes!) {
+      if (i.cicleId.toString() == cicleId) {
+        perfil.add(i);
+      }
+    }
+    isLoading = false;
+    notifyListeners();
+    return perfil;
   }
 }

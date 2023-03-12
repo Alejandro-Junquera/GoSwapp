@@ -47,7 +47,11 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
         child: CircularProgressIndicator(),
       );
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Profile')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Profile'),
+        backgroundColor: Colors.blueGrey[800],
+      ),
       body: Stack(children: [
         //LISTADO DE ALUMNOS DEL CURSO DEL PROFESOR
         Positioned(

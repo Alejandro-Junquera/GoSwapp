@@ -73,17 +73,26 @@ class AuthService extends ChangeNotifier {
     return null;
   }
 
-  Future<String?> registerProfesor(String name, String surname, String email,
-      String password, String type, int cicleId) async {
+  Future<String?> registerProfesor(
+      String name,
+      String surname,
+      String email,
+      String password,
+      String mobile,
+      String address,
+      String type,
+      int cicleId) async {
     final Map<String, dynamic> authData = {
       'firstname': name,
       'surname': surname,
       'email': email,
+      'mobile': mobile,
+      'address': address,
       'type': type,
       'password': password,
       'cicle_id': cicleId
     };
-    final url = Uri.http(_baseUrl, '/api/register', {});
+    final url = Uri.http(_baseUrl, '/public/api/teachers', {});
 
     final resp = await http.post(url,
         headers: {
@@ -124,6 +133,10 @@ class AuthService extends ChangeNotifier {
       if (decodedResp['success']['userType'] == 'teacher') {
         await storage.write(key: 'cicleId', value: await obtenerCicleId());
       }
+      if (decodedResp['success']['userType'] == 'student') {
+        await storage.write(
+            key: 'cicleId', value: await obtenerCicleIdAlumno());
+      }
       return decodedResp['success']['userType'];
     } else {
       return decodedResp['error'];
@@ -162,6 +175,27 @@ class AuthService extends ChangeNotifier {
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
     var profesores = Profesores.fromJson(decodedResp);
     for (var i in profesores.profesores!) {
+      if (i.id == int.parse(idUser!)) {
+        return i.cicleId.toString();
+      }
+    }
+  }
+
+  obtenerCicleIdAlumno() async {
+    String? token = await AuthService().readToken();
+    String? idUser = await AuthService().readId();
+    final url = Uri.http(_baseUrl, '/public/api/students');
+    final resp = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    var profesores = Alumnos.fromJson(decodedResp);
+    for (var i in profesores.estudiantes!) {
       if (i.id == int.parse(idUser!)) {
         return i.cicleId.toString();
       }

@@ -104,4 +104,24 @@ class UserService extends ChangeNotifier {
     notifyListeners();
     return null;
   }
+
+  obtenerPerfilUser() async {
+    String? token = await AuthService().readToken();
+    String? id = await AuthService().readId();
+    final url = Uri.http(_baseUrl, '/public/api/users/$id');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    isLoading = false;
+    notifyListeners();
+    return decodedResp;
+  }
 }

@@ -260,4 +260,25 @@ class TeacherService extends ChangeNotifier {
     notifyListeners();
     return profesor;
   }
+
+  borrarProfesor(int profId) async {
+    String? token = await AuthService().readToken();
+
+    final url = Uri.http(_baseUrl, '/public/api/users/$profId');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.delete(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(decodedResp);
+    isLoading = false;
+    notifyListeners();
+    return null;
+  }
 }

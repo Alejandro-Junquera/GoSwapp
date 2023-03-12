@@ -32,7 +32,7 @@ class OfertasProfScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, 'perfilProfesor');
               },
-              icon: Icon(Icons.info))
+              icon: Icon(Icons.manage_accounts))
         ],
       ),
       body: const _Ofertas(),

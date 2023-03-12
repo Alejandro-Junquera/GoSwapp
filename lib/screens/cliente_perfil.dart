@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/services/services.dart';
+import 'package:provider/provider.dart';
 
 class ClientePerfilScreen extends StatefulWidget {
   const ClientePerfilScreen({super.key});
@@ -8,10 +10,34 @@ class ClientePerfilScreen extends StatefulWidget {
 }
 
 class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
+  Map<String, dynamic>? perfil;
+  obtenerPerfil() async {
+    final userService = Provider.of<UserService>(context, listen: false);
+    perfil = await userService.obtenerPerfilUser();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(
+      Duration(milliseconds: 50),
+      () {
+        obtenerPerfil();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+    if (userService.isLoading)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         centerTitle: true,
         title: const Text("Perfil"),
       ),
@@ -53,7 +79,11 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
           child: TextField(
             readOnly: true,
             controller: TextEditingController()
-              ..text = 'Pablo Alfonso Gonzalez Diaz',
+              ..text = perfil == null
+                  ? ''
+                  : perfil!['Usuario']['firstname'].toString() +
+                      ' ' +
+                      perfil!['Usuario']['surname'].toString(),
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
@@ -71,11 +101,44 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+            readOnly: true,
+            controller: TextEditingController()
+              ..text =
+                  perfil == null ? '' : perfil!['Usuario']['email'].toString(),
+            maxLines: 1,
+            decoration: const InputDecoration(
+                disabledBorder: OutlineInputBorder(),
+                enabled: false,
+                label: Text('Email',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.blueGrey)),
+                prefixIcon: Icon(
+                  Icons.alternate_email,
+                  color: Colors.blueGrey,
+                )),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
               readOnly: true,
-              controller: TextEditingController()..text = '658213685',
+              controller: TextEditingController()
+                ..text = perfil == null
+                    ? ''
+                    : perfil!['Usuario']['mobile'].toString(),
               maxLines: 1,
               decoration: const InputDecoration(
                   disabledBorder: OutlineInputBorder(),
+                  label: Text('Telefono',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.blueGrey)),
                   enabled: false,
                   prefixIcon: Icon(
                     Icons.phone,
@@ -90,11 +153,18 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
           child: TextField(
             readOnly: true,
             controller: TextEditingController()
-              ..text = 'Pablo Alfonso Gonzalez Diaz',
+              ..text = perfil == null
+                  ? ''
+                  : perfil!['Usuario']['address'].toString(),
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
                 enabled: false,
+                label: Text('Direccion',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.blueGrey)),
                 prefixIcon: Icon(
                   Icons.home,
                   color: Colors.blueGrey,

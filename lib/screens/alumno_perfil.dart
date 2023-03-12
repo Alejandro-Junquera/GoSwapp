@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/models/models.dart';
+import 'package:flutter_aplicacion_ganadora/services/services.dart';
+import 'package:provider/provider.dart';
 
 class AlumnoPerfilScreen extends StatefulWidget {
   const AlumnoPerfilScreen({super.key});
@@ -8,10 +11,34 @@ class AlumnoPerfilScreen extends StatefulWidget {
 }
 
 class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
+  List<AlumnoPerfilData> perfil = [];
+  obtenerPerfil() async {
+    final alumnoService = Provider.of<AlumnoService>(context, listen: false);
+    await alumnoService.obtenerPerfilAlumno();
+    setState(() {
+      perfil = alumnoService.perfil;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    Future.delayed(
+      Duration(milliseconds: 50),
+      () => obtenerPerfil(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final alumnoService = Provider.of<AlumnoService>(context);
+    if (alumnoService.isLoading)
+      return Center(child: CircularProgressIndicator());
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
         centerTitle: true,
         title: const Text("Perfil"),
       ),
@@ -56,22 +83,9 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
                         width: 20,
                       ),
                       Text(
-                        '1500',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow[700],
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        '4.5',
+                        perfil[0].boscoins != null
+                            ? perfil[0].boscoins.toString()
+                            : '',
                         style: TextStyle(fontSize: 18),
                       ),
                     ],
@@ -89,12 +103,37 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
           child: TextField(
             readOnly: true,
             controller: TextEditingController()
-              ..text = 'Pablo Alfonso Gonzalez Diaz',
+              ..text = perfil[0].firstname != null
+                  ? perfil[0].firstname.toString() +
+                      ' ' +
+                      perfil[0].surname.toString()
+                  : '',
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
                 enabled: false,
                 label: Text('Nombre Completo',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.blueGrey))),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            readOnly: true,
+            controller: TextEditingController()
+              ..text =
+                  perfil[0].email != null ? perfil[0].email.toString() : '',
+            maxLines: 1,
+            decoration: const InputDecoration(
+                disabledBorder: OutlineInputBorder(),
+                enabled: false,
+                label: Text('Email',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -111,7 +150,10 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
               width: MediaQuery.of(context).size.width * 0.50,
               child: TextField(
                   readOnly: true,
-                  controller: TextEditingController()..text = '658213685',
+                  controller: TextEditingController()
+                    ..text = perfil[0].mobile != null
+                        ? perfil[0].mobile.toString()
+                        : '',
                   maxLines: 1,
                   decoration: const InputDecoration(
                       disabledBorder: OutlineInputBorder(),
@@ -125,7 +167,10 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
               width: MediaQuery.of(context).size.width * 0.40,
               child: TextField(
                 readOnly: true,
-                controller: TextEditingController()..text = 'Electricidad',
+                controller: TextEditingController()
+                  ..text = perfil[0].cicleName != null
+                      ? perfil[0].cicleName.toString()
+                      : '',
                 maxLines: 1,
                 decoration: const InputDecoration(
                     disabledBorder: OutlineInputBorder(),
@@ -147,7 +192,8 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
           child: TextField(
             readOnly: true,
             controller: TextEditingController()
-              ..text = 'Pablo Alfonso Gonzalez Diaz',
+              ..text =
+                  perfil[0].address != null ? perfil[0].address.toString() : '',
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),

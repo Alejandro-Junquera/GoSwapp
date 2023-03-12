@@ -15,6 +15,8 @@ class ClienteScreen extends StatefulWidget {
 }
 
 class _ClienteScreenState extends State<ClienteScreen> {
+  Color? color;
+  String estadoTarea = '';
   List<TareasDataUser> misTareas = [];
   obtenerTareasUsuario() async {
     final userService = Provider.of<UserService>(context, listen: false);
@@ -22,6 +24,10 @@ class _ClienteScreenState extends State<ClienteScreen> {
     setState(() {
       misTareas = userService.misTareas;
     });
+  }
+
+  Future refresh() async {
+    obtenerTareasUsuario();
   }
 
   ScrollController scrollController = ScrollController();
@@ -84,7 +90,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
               onPressed: () {
                 Navigator.pushNamed(context, 'perfilCliente');
               },
-              icon: Icon(Icons.info))
+              icon: Icon(Icons.manage_accounts))
         ],
       ),
       body: SizedBox(
@@ -94,6 +100,16 @@ class _ClienteScreenState extends State<ClienteScreen> {
           itemCount: misTareas.length,
           itemBuilder: (context, index) {
             final tarea = misTareas[index];
+            if (tarea.completionDate != null) {
+              color = Colors.red;
+              estadoTarea = 'Tarea finalizada';
+            } else if (tarea.grade == '0.00') {
+              color = Colors.orange;
+              estadoTarea = 'Tarea publicada';
+            } else {
+              color = Colors.green;
+              estadoTarea = 'En proceso';
+            }
             double angle = index + 1 - topContainer;
             if (angle < 0) {
               angle = 0;
@@ -136,6 +152,28 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                         ? Image.network(
                                             'https://goswapp.allsites.es/storage/app/public/' +
                                                 tarea.imagen.toString(),
+                                            loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: loadingProgress
+                                                              .expectedTotalBytes !=
+                                                          null
+                                                      ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                      : null,
+                                                ),
+                                              );
+                                            },
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -165,10 +203,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                             child: Card(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  side: BorderSide(
-                                      color: tarea.completionDate != null
-                                          ? Colors.green
-                                          : Colors.orange)),
+                                  side: BorderSide(color: color!)),
                               elevation: 10,
                               child: Column(
                                 children: [
@@ -194,9 +229,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                                       ),
                                     ),
                                   ),
-                                  tarea.completionDate != null
-                                      ? Text('Tarea finalizada')
-                                      : Text('En proceso')
+                                  Text(estadoTarea),
                                 ],
                               ),
                             ),

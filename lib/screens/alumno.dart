@@ -86,7 +86,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, 'perfilAlumno');
                 },
-                icon: Icon(Icons.info))
+                icon: Icon(Icons.manage_accounts))
           ]),
       body: Column(
         children: [
@@ -233,6 +233,29 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                                       tareas[index]
                                                           .imagen
                                                           .toString(),
+                                                  loadingBuilder:
+                                                      (BuildContext context,
+                                                          Widget child,
+                                                          ImageChunkEvent?
+                                                              loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    }
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        value: loadingProgress
+                                                                    .expectedTotalBytes !=
+                                                                null
+                                                            ? loadingProgress
+                                                                    .cumulativeBytesLoaded /
+                                                                loadingProgress
+                                                                    .expectedTotalBytes!
+                                                            : null,
+                                                      ),
+                                                    );
+                                                  },
                                                   fit: BoxFit.cover,
                                                 )
                                               : Image.asset(
@@ -244,7 +267,57 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height: 25,
+                                height: 40,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'Fecha publicacion:  ' +
+                                        tareas[index]
+                                            .createdAt
+                                            .toString()
+                                            .substring(0, 11),
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    tareas[index].completionDate != null
+                                        ? 'Fecha finalizacion: ' +
+                                            tareas[index]
+                                                .completionDate
+                                                .toString() +
+                                            ' '
+                                        : '',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Direccion',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                tareas[index].clientAddress.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 20,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -292,7 +365,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                 ],
                               ),
                               const SizedBox(
-                                height: 50,
+                                height: 20,
                               ),
                               tareaAsignada.taskId != null ||
                                       tareas[index].completionDate != null
@@ -309,7 +382,15 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                         final alumnoService =
                                             Provider.of<AlumnoService>(context,
                                                 listen: false);
-
+                                        QuickAlert.show(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            type: QuickAlertType.success,
+                                            title: 'Completado',
+                                            confirmBtnColor: Colors.blueGrey,
+                                            text:
+                                                'Tarea solicitada correctamente',
+                                            confirmBtnText: 'Vale');
                                         await alumnoService.solicitarTarea(
                                             info[0].userId!,
                                             tareas[index].taskId!);

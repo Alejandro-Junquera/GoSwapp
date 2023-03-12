@@ -44,6 +44,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blueGrey[800],
           title: const Text("Oferta"),
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -305,9 +306,9 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                                 Provider.of<TeacherService>(
                                                     context,
                                                     listen: false);
-                                            teacherService.eliminarUnaTarea(
-                                                widget.tarea.id!);
-
+                                            await teacherService
+                                                .eliminarUnaTarea(
+                                                    widget.tarea.id!);
                                             Navigator.pushReplacementNamed(
                                                 context, 'initProf');
                                           },
@@ -372,6 +373,23 @@ class _CardPersonalizada extends StatelessWidget {
                           ? Image.network(
                               'https://goswapp.allsites.es/storage/app/public/' +
                                   tarea.imagen.toString(),
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
                               fit: BoxFit.cover,
                               scale: 5,
                             )
