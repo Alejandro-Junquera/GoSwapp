@@ -1,27 +1,27 @@
-class Profesores {
-  List<ProfesorData>? profesores;
+class PerfilProf {
+  List<PerfilP>? students;
 
-  Profesores({this.profesores});
+  PerfilProf({this.students});
 
-  Profesores.fromJson(Map<String, dynamic> json) {
-    if (json['Profesores'] != null) {
-      profesores = <ProfesorData>[];
-      json['Profesores'].forEach((v) {
-        profesores!.add(ProfesorData.fromJson(v));
+  PerfilProf.fromJson(Map<String, dynamic> json) {
+    if (json['students'] != null) {
+      students = <PerfilP>[];
+      json['students'].forEach((v) {
+        students!.add(PerfilP.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.profesores != null) {
-      data['Profesores'] = this.profesores!.map((v) => v.toJson()).toList();
+    if (this.students != null) {
+      data['students'] = this.students!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class ProfesorData {
+class PerfilP {
   int? id;
   int? userId;
   String? firstname;
@@ -29,14 +29,15 @@ class ProfesorData {
   String? email;
   String? password;
   String? type;
+  int? boscoins;
   String? address;
   String? mobile;
   int? cicleId;
   String? createdAt;
   String? updatedAt;
-  String? cicleName;
+  int? completedTasks;
 
-  ProfesorData(
+  PerfilP(
       {this.id,
       this.userId,
       this.firstname,
@@ -44,14 +45,15 @@ class ProfesorData {
       this.email,
       this.password,
       this.type,
+      this.boscoins,
       this.address,
       this.mobile,
       this.cicleId,
       this.createdAt,
       this.updatedAt,
-      this.cicleName});
+      this.completedTasks});
 
-  ProfesorData.fromJson(Map<String, dynamic> json) {
+  PerfilP.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     firstname = json['firstname'];
@@ -59,12 +61,13 @@ class ProfesorData {
     email = json['email'];
     password = json['password'];
     type = json['type'];
+    boscoins = json['boscoins'];
     address = json['address'];
     mobile = json['mobile'];
     cicleId = json['cicle_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    cicleName = json['cicleName'];
+    completedTasks = json['completed_tasks'];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,12 +79,13 @@ class ProfesorData {
     data['email'] = this.email;
     data['password'] = this.password;
     data['type'] = this.type;
+    data['boscoins'] = this.boscoins;
     data['address'] = this.address;
     data['mobile'] = this.mobile;
     data['cicle_id'] = this.cicleId;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['cicleName'] = this.cicleName;
+    data['completed_tasks'] = this.completedTasks;
     return data;
   }
 }

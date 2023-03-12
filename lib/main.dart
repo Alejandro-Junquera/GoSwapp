@@ -66,6 +66,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ComentarioFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AlumnoService(),
         )
       ],
       child: MaterialApp(
@@ -81,7 +84,7 @@ class MyApp extends StatelessWidget {
             'nuevaOfertaCliente': (_) => const NuevaOfertaClienteScreen(),
             'admin': (_) => const OfertasAdminScreen(),
             'crearProfesor': (_) => const CrearProfresorScreen(),
-            'alumno': (_) => const AlumnoScreen(),
+            'alumno': (_) => AlumnoScreen(),
             'infoOfertaCliente': (_) => const InfoOfertaClienteScreen(),
             'googleMap': (_) => const GoogleMapScreen(),
             'perfilProfesor': (_) => const ProfesorPerfilScreen(),

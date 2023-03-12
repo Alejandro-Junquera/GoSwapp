@@ -27,6 +27,7 @@ class AdminService extends ChangeNotifier {
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
     var tareaSinCiclo = TareasUser.fromJson(decodedResp);
+    print(decodedResp);
     for (var i in tareaSinCiclo.tareas!) {
       if (i.cicleId == null) {
         tareasPorAsignar.add(i);

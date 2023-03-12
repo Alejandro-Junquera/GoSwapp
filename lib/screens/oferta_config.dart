@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:drop_cap_text/drop_cap_text.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/models/models.dart';
@@ -64,96 +63,90 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                 padding: EdgeInsets.all(10.0),
                 child: _CardPersonalizada(tarea: widget.tarea),
               ),
-              widget.tarea.completionDate == null
-                  ? ExpansionTile(
-                      initiallyExpanded: true,
-                      title: const Text("Lista de alumnos interesados"),
-                      children: [
-                        SingleChildScrollView(
-                          child: SizedBox(
-                            height: 250,
-                            child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: solicitudes.length,
-                              itemBuilder: (context, index) {
-                                final alumno = solicitudes[index];
+              IgnorePointer(
+                ignoring: widget.tarea.completionDate == null ? false : true,
+                child: ExpansionTile(
+                  initiallyExpanded: false,
+                  title: const Text("Lista de alumnos interesados"),
+                  children: [
+                    SingleChildScrollView(
+                      child: SizedBox(
+                        height: 250,
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: solicitudes.length,
+                          itemBuilder: (context, index) {
+                            final alumno = solicitudes[index];
 
-                                Color selectedBorderColor = Colors.white;
-                                Color fillColor = Colors.white;
+                            Color selectedBorderColor = Colors.white;
+                            Color fillColor = Colors.white;
 
-                                if (alumno.assignedAt != null) {
-                                  isSelected = [false, true];
-                                  selectedBorderColor =
-                                      Colors.green[700] as Color;
-                                  fillColor = Colors.green[100] as Color;
-                                } else {
-                                  isSelected = [true, false];
-                                  selectedBorderColor =
-                                      Colors.red[700] as Color;
-                                  fillColor = Colors.red[100] as Color;
-                                }
+                            if (alumno.assignedAt != null) {
+                              isSelected = [false, true];
+                              selectedBorderColor = Colors.green[700] as Color;
+                              fillColor = Colors.green[100] as Color;
+                            } else {
+                              isSelected = [true, false];
+                              selectedBorderColor = Colors.red[700] as Color;
+                              fillColor = Colors.red[100] as Color;
+                            }
 
-                                return ListTile(
-                                  title: Row(
-                                    children: [
-                                      Text(alumno.studentName! +
-                                          ' ' +
-                                          alumno.surname!),
-                                      const Spacer(),
-                                      ToggleButtons(
-                                        selectedBorderColor:
-                                            selectedBorderColor,
-                                        fillColor: fillColor,
-                                        direction: Axis.horizontal,
-                                        isSelected: isSelected,
-                                        onPressed: (int index) async {
-                                          final teacherService =
-                                              Provider.of<TeacherService>(
-                                                  context,
-                                                  listen: false);
+                            return ListTile(
+                              title: Row(
+                                children: [
+                                  Text(alumno.studentName! +
+                                      ' ' +
+                                      alumno.surname!),
+                                  const Spacer(),
+                                  ToggleButtons(
+                                    selectedBorderColor: selectedBorderColor,
+                                    fillColor: fillColor,
+                                    direction: Axis.horizontal,
+                                    isSelected: isSelected,
+                                    onPressed: (int index) async {
+                                      final teacherService =
+                                          Provider.of<TeacherService>(context,
+                                              listen: false);
 
-                                          if (index == 0) {
-                                            await teacherService
-                                                .desAsignarTarea(alumno.id!);
-                                            setState(() {
-                                              alumno.assignedAt = 'Fecha';
-                                            });
-                                            obtenerSolicitudes(
-                                                widget.tarea.id!);
-                                          } else {
-                                            await teacherService
-                                                .asignarTarea(alumno.id!);
-                                            setState(() {
-                                              alumno.assignedAt = null;
-                                            });
-                                            obtenerSolicitudes(
-                                                widget.tarea.id!);
-                                          }
-                                        },
-                                        children: const [
-                                          Icon(
-                                            Icons.cancel,
-                                            color: Colors.red,
-                                          ),
-                                          Icon(
-                                            Icons.done,
-                                            color: Colors.green,
-                                          ),
-                                        ],
-                                      )
+                                      if (index == 0) {
+                                        await teacherService
+                                            .desAsignarTarea(alumno.id!);
+                                        setState(() {
+                                          alumno.assignedAt = 'Fecha';
+                                        });
+                                        obtenerSolicitudes(widget.tarea.id!);
+                                      } else {
+                                        await teacherService
+                                            .asignarTarea(alumno.id!);
+                                        setState(() {
+                                          alumno.assignedAt = null;
+                                        });
+                                        obtenerSolicitudes(widget.tarea.id!);
+                                      }
+                                    },
+                                    children: const [
+                                      Icon(
+                                        Icons.cancel,
+                                        color: Colors.red,
+                                      ),
+                                      Icon(
+                                        Icons.done,
+                                        color: Colors.green,
+                                      ),
                                     ],
-                                  ),
-                                  subtitle:
-                                      Text(alumno.cicleStudent.toString()),
-                                );
-                              },
-                            ),
-                          ),
+                                  )
+                                ],
+                              ),
+                              subtitle: Text(alumno.cicleStudent.toString()),
+                            );
+                          },
                         ),
-                      ],
-                    )
-                  : SizedBox(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: widget.tarea.comment != null
@@ -348,89 +341,67 @@ class _CardPersonalizada extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Card(
-        color: const Color.fromARGB(255, 217, 217, 217),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  tarea.imagen != null
-                      ? Image.network(
-                          'https://goswapp.allsites.es/storage/app/public/' +
-                              tarea.imagen.toString(),
-                          fit: BoxFit.cover,
-                          width: 150,
-                          height: 150,
-                          scale: 5,
-                        )
-                      : Image.asset(
-                          'assets/images/no-image.jpg',
-                          fit: BoxFit.cover,
-                          width: 150,
-                          height: 150,
-                          scale: 5,
-                        ),
-                  Column(
-                    children: [
-                      Text(
-                        tarea.title.toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 100,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: Text(
-                            tarea.description.toString(),
-                            maxLines: 50,
-                            style: TextStyle(
-                              fontSize: 16,
+    return Card(
+      color: const Color.fromARGB(255, 217, 217, 217),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Text(
+              tarea.title.toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width,
+              child: DropCapText(
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.justify,
+                tarea.description.toString(),
+                dropCap: DropCap(
+                    width: 180,
+                    height: 180,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 6, bottom: 6),
+                      child: tarea.imagen != null
+                          ? Image.network(
+                              'https://goswapp.allsites.es/storage/app/public/' +
+                                  tarea.imagen.toString(),
+                              fit: BoxFit.cover,
+                              scale: 5,
+                            )
+                          : Image.asset(
+                              'assets/images/no-image.jpg',
+                              fit: BoxFit.cover,
+                              scale: 5,
                             ),
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+                    )),
               ),
-              const SizedBox(
-                height: 15,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              RatingBarIndicator(
+                itemCount: 5,
+                itemBuilder: (context, _) =>
+                    const Icon(Icons.star, color: Colors.amber),
+                rating: double.parse(tarea.grade!),
               ),
-              Row(children: [
-                RatingBarIndicator(
-                  itemCount: 5,
-
-                  itemBuilder: (context, _) =>
-                      const Icon(Icons.star, color: Colors.amber),
-                  rating: double.parse(tarea.grade!), //TODO: NUMERO CAMBIABLE
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: IconButton(
-                      color: Colors.blue,
-                      onPressed: (() {
-                        Navigator.pushNamed(context, 'googleMap',
-                            arguments: tarea.clientAddress);
-                      }),
-                      icon: Icon(Icons.location_on)),
-                )
-              ]),
-            ],
-          ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0),
+                child: IconButton(
+                    color: Colors.blue,
+                    onPressed: (() {
+                      Navigator.pushNamed(context, 'googleMap',
+                          arguments: tarea.clientAddress);
+                    }),
+                    icon: Icon(Icons.location_on)),
+              )
+            ]),
+          ],
         ),
       ),
     );

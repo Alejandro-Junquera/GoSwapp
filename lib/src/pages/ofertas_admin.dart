@@ -65,7 +65,7 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                 startActionPane:
                     ActionPane(motion: const DrawerMotion(), children: [
                   SlidableAction(
-                    onPressed: (BuildContext context) {
+                    onPressed: (BuildContext context) async {
                       if (adminForm.cicloId == 0) {
                         customToast('Seleciona un ciclo', context);
                       } else {

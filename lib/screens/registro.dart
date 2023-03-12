@@ -7,6 +7,7 @@ import 'package:flutter_aplicacion_ganadora/src/pages/pages.dart';
 // ignore: depend_on_referenced_packages
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:quickalert/quickalert.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
 import 'package:provider/provider.dart';
@@ -75,13 +76,20 @@ class _RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<_RegisterForm> {
   List<CicloData> ciclos = [];
+  int ciclo = 0;
 
   getCiclos() async {
     ciclos.clear();
-    final ciclosService = Provider.of<CiclosService>(context);
+    final ciclosService = Provider.of<CiclosService>(context, listen: false);
     await ciclosService.getCiclos();
-
     ciclos = ciclosService.ciclos;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(milliseconds: 400), () => getCiclos());
   }
 
   bool valorSwitch = false;
@@ -89,7 +97,7 @@ class _RegisterFormState extends State<_RegisterForm> {
   @override
   Widget build(BuildContext context) {
     final registerForm = Provider.of<RegisterFormProvider>(context);
-    getCiclos();
+
     return Form(
       key: registerForm.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -173,6 +181,39 @@ class _RegisterFormState extends State<_RegisterForm> {
           ),
           const SizedBox(height: 10),
           FadeInRight(
+            delay: const Duration(milliseconds: 800),
+            child: TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecorations.authInputDecoration(
+                    hinText: '123456789',
+                    labelText: 'Telefono',
+                    prefixIcon: Icons.phone),
+                onChanged: (value) => registerForm.tel = value,
+                validator: (value) {
+                  return (value != null && value.length == 9)
+                      ? null
+                      : 'Telefono no valido';
+                }),
+          ),
+          FadeInLeft(
+            delay: const Duration(milliseconds: 800),
+            child: TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.streetAddress,
+                decoration: InputDecorations.authInputDecoration(
+                    hinText: 'Avd Campo del Sur, Cadiz',
+                    labelText: 'Direccion',
+                    prefixIcon: Icons.location_city),
+                onChanged: (value) => registerForm.dir = value,
+                validator: (value) {
+                  return (value != null && value.length >= 10)
+                      ? null
+                      : 'La direccion tiene que tener mas de 10 caracteres';
+                }),
+          ),
+          const SizedBox(height: 10),
+          FadeInRight(
             delay: const Duration(milliseconds: 900),
             child: TextFormField(
                 autocorrect: false,
@@ -213,7 +254,7 @@ class _RegisterFormState extends State<_RegisterForm> {
             child: Visibility(
               visible: valorSwitch,
               child: DropdownButtonFormField(
-                hint: const Text('Select a cicle'),
+                hint: const Text('Seleciona un ciclo'),
                 items: ciclos.map((e) {
                   return DropdownMenuItem(
                     value: e.id,
@@ -221,7 +262,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                   );
                 }).toList(),
                 onChanged: (value) {
-                  registerForm.ciclos_id = value!;
+                  ciclo = value!;
                 },
               ),
             ),
@@ -239,22 +280,98 @@ class _RegisterFormState extends State<_RegisterForm> {
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus();
-                      final registerService =
-                          Provider.of<AuthService>(context, listen: false);
-                      if (!registerForm.isValidForm()) return;
-                      final String? mensaje = await registerService.register(
+                      if (!valorSwitch) {
+                        final registerService =
+                            Provider.of<AuthService>(context, listen: false);
+                        if (!registerForm.isValidForm()) return;
+                        final String? mensaje =
+                            await registerService.registerUser(
                           registerForm.nombre,
                           registerForm.apellido,
                           registerForm.email,
                           registerForm.contrasenia,
-                          valorSwitch == false ? 'C' : 'A',
-                          registerForm.ciclos_id);
-                      if (mensaje != null) {
-                        // ignore: use_build_context_synchronously
-                        customToast(mensaje, context);
+                          registerForm.tel,
+                          registerForm.dir,
+                          'user',
+                        );
+                        if (mensaje != null) {
+                          QuickAlert.show(
+                              context: context,
+                              barrierDismissible: false,
+                              type: QuickAlertType.warning,
+                              title: 'Lo sentimos',
+                              confirmBtnColor: Colors.blueGrey,
+                              text: 'El email utilizado esta duplicado',
+                              confirmBtnText: 'Vale');
+                        } else {
+                          QuickAlert.show(
+                              context: context,
+                              barrierDismissible: false,
+                              type: QuickAlertType.success,
+                              title: 'Completado',
+                              confirmBtnColor: Colors.blueGrey,
+                              text: 'Te has registrado correctamente',
+                              showCancelBtn: false);
+                          Future.delayed(
+                            Duration(milliseconds: 1300),
+                            () {
+                              Navigator.pop(context);
+                              Navigator.pushReplacementNamed(context, 'login');
+                            },
+                          );
+                        }
                       } else {
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacementNamed(context, 'login');
+                        if (ciclo != 0) {
+                          final registerService =
+                              Provider.of<AuthService>(context, listen: false);
+                          if (!registerForm.isValidForm()) return;
+                          final String? mensaje =
+                              await registerService.registerAlumno(
+                                  registerForm.nombre,
+                                  registerForm.apellido,
+                                  registerForm.email,
+                                  registerForm.contrasenia,
+                                  registerForm.tel,
+                                  registerForm.dir,
+                                  'student',
+                                  ciclo);
+                          if (mensaje != null) {
+                            QuickAlert.show(
+                                context: context,
+                                barrierDismissible: false,
+                                type: QuickAlertType.warning,
+                                title: 'Lo sentimos',
+                                confirmBtnColor: Colors.blueGrey,
+                                text: 'El email utilizado esta duplicado',
+                                confirmBtnText: 'Vale');
+                          } else {
+                            QuickAlert.show(
+                                context: context,
+                                barrierDismissible: false,
+                                type: QuickAlertType.success,
+                                title: 'Completado',
+                                confirmBtnColor: Colors.blueGrey,
+                                text: 'Te has registrado correctamente',
+                                showCancelBtn: false);
+                            Future.delayed(
+                              Duration(milliseconds: 1300),
+                              () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                    context, 'login');
+                              },
+                            );
+                          }
+                        } else {
+                          QuickAlert.show(
+                              context: context,
+                              barrierDismissible: false,
+                              type: QuickAlertType.info,
+                              title: 'Informacion',
+                              confirmBtnColor: Colors.blueGrey,
+                              text: 'Debes elegir un ciclo',
+                              confirmBtnText: 'Vale');
+                        }
                       }
                     },
               child: Container(
@@ -269,28 +386,6 @@ class _RegisterFormState extends State<_RegisterForm> {
           ),
         ],
       ),
-    );
-  }
-
-  void customToast(String message, BuildContext context) {
-    showToast(
-      message,
-      textStyle: const TextStyle(
-        fontSize: 14,
-        wordSpacing: 0.1,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-      textPadding: const EdgeInsets.all(23),
-      fullWidth: true,
-      toastHorizontalMargin: 25,
-      borderRadius: BorderRadius.circular(15),
-      backgroundColor: Colors.blueGrey[500],
-      alignment: Alignment.bottomCenter,
-      position: StyledToastPosition.top,
-      duration: const Duration(seconds: 3),
-      animation: StyledToastAnimation.slideFromTop,
-      context: context,
     );
   }
 }

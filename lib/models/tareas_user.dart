@@ -56,7 +56,7 @@ class TareasDataUser {
       this.clientRating});
 
   TareasDataUser.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['task_id'];
     title = json['title'];
     numBoscoins = json['num_boscoins'];
     description = json['description'];
@@ -75,7 +75,7 @@ class TareasDataUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['task_id'] = this.id;
     data['title'] = this.title;
     data['num_boscoins'] = this.numBoscoins;
     data['description'] = this.description;

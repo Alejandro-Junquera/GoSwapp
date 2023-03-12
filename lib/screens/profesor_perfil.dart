@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aplicacion_ganadora/models/models.dart';
+import 'package:flutter_aplicacion_ganadora/services/services.dart';
+import 'package:provider/provider.dart';
 
 class ProfesorPerfilScreen extends StatefulWidget {
   const ProfesorPerfilScreen({super.key});
@@ -8,52 +11,41 @@ class ProfesorPerfilScreen extends StatefulWidget {
 }
 
 class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
-  List<_Alumno> alumnos = [
-    _Alumno(
-        nombre: "Alejandro",
-        apellidos: 'Junquera Manrique',
-        numBoscoins: 1500,
-        numTareasCompletadas: 5),
-    _Alumno(
-        nombre: "Pepe",
-        apellidos: 'Gonzalez Carrascosa',
-        numBoscoins: 2000,
-        numTareasCompletadas: 8),
-    _Alumno(
-        nombre: "Ana",
-        apellidos: 'Quevedo Jazmin',
-        numBoscoins: 500,
-        numTareasCompletadas: 2),
-    _Alumno(
-        nombre: "Luis",
-        apellidos: 'Quintero Velazquez',
-        numBoscoins: 350,
-        numTareasCompletadas: 1),
-    _Alumno(
-        nombre: "Rodrigo",
-        apellidos: 'Valtonero Murillo',
-        numBoscoins: 15000,
-        numTareasCompletadas: 120),
-    _Alumno(
-        nombre: "Sara Maria",
-        apellidos: 'Quesado Prado',
-        numBoscoins: 1000,
-        numTareasCompletadas: 4),
-    _Alumno(
-        nombre: "Alba",
-        apellidos: 'Perez Perez',
-        numBoscoins: 350,
-        numTareasCompletadas: 7),
-    _Alumno(
-        nombre: "Ivan",
-        apellidos: 'Rueda Quintero',
-        numBoscoins: 1500,
-        numTareasCompletadas: 5),
-  ];
+  List<PerfilP> estudiantesProf = [];
+  List<ProfesorData> profesor = [];
+  obtenerEstudiantes() async {
+    final teacherService = Provider.of<TeacherService>(context, listen: false);
+    await teacherService.estudiantesConTareasYBoscoins();
+    setState(() {
+      estudiantesProf = teacherService.estudiantesProf;
+    });
+  }
+
+  obtenerProfesor() async {
+    final teacherService = Provider.of<TeacherService>(context, listen: false);
+    await teacherService.recuperarPerfil();
+    setState(() {
+      profesor = teacherService.profesor;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    obtenerProfesor();
+    obtenerEstudiantes();
+  }
+
   double positiontop = 0;
   Icon icono = const Icon(Icons.keyboard_double_arrow_down);
   @override
   Widget build(BuildContext context) {
+    final teacherService = Provider.of<TeacherService>(context);
+    if (teacherService.isLoading)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text('Profile')),
       body: Stack(children: [
@@ -82,15 +74,15 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * 0.50,
                     child: ListView.builder(
-                      itemCount: alumnos.length,
+                      itemCount: estudiantesProf.length,
                       itemBuilder: (context, index) {
-                        _Alumno alumno = alumnos[index];
+                        var alumno = estudiantesProf[index];
                         return ListTile(
                             title: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(alumno.nombre),
+                                  Text(alumno.firstname.toString()),
                                   Row(
                                     children: [
                                       const Icon(
@@ -100,8 +92,7 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      Text(alumno.numTareasCompletadas
-                                          .toString()),
+                                      Text(alumno.completedTasks.toString()),
                                       const SizedBox(
                                         width: 20,
                                       ),
@@ -113,11 +104,13 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      Text(alumno.numBoscoins.toString())
+                                      Text(alumno.boscoins != null
+                                          ? alumno.boscoins.toString()
+                                          : '0')
                                     ],
                                   )
                                 ]),
-                            subtitle: Text(alumno.apellidos));
+                            subtitle: Text(alumno.surname.toString()));
                       },
                     ),
                   ),
@@ -147,7 +140,11 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                             child: TextField(
                               readOnly: true,
                               controller: TextEditingController()
-                                ..text = 'Pablo Alfonso Gonzalez Diaz',
+                                ..text = !profesor.isEmpty
+                                    ? profesor[0].firstname.toString() +
+                                        ' ' +
+                                        profesor[0].surname.toString()
+                                    : 'Sin datos',
                               maxLines: 1,
                               decoration: const InputDecoration(
                                   disabledBorder: OutlineInputBorder(),
@@ -171,7 +168,9 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                                 child: TextField(
                                     readOnly: true,
                                     controller: TextEditingController()
-                                      ..text = '658213685',
+                                      ..text = !profesor.isEmpty
+                                          ? profesor[0].mobile.toString()
+                                          : 'Sin datos',
                                     maxLines: 1,
                                     decoration: const InputDecoration(
                                         disabledBorder: OutlineInputBorder(),
@@ -187,7 +186,9 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                                 child: TextField(
                                   readOnly: true,
                                   controller: TextEditingController()
-                                    ..text = 'Electricidad',
+                                    ..text = !profesor.isEmpty
+                                        ? profesor[0].cicleName.toString()
+                                        : 'Sin datos',
                                   maxLines: 1,
                                   decoration: const InputDecoration(
                                       disabledBorder: OutlineInputBorder(),
@@ -211,7 +212,9 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                             child: TextField(
                               readOnly: true,
                               controller: TextEditingController()
-                                ..text = 'Pablo Alfonso Gonzalez Diaz',
+                                ..text = !profesor.isEmpty
+                                    ? profesor[0].address.toString()
+                                    : 'Sin datos',
                               maxLines: 1,
                               decoration: const InputDecoration(
                                   disabledBorder: OutlineInputBorder(),
@@ -319,17 +322,4 @@ class _TeacherData extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
-}
-
-//BORRAR MAS TARDE
-class _Alumno {
-  String nombre;
-  String apellidos;
-  int numBoscoins;
-  int numTareasCompletadas;
-  _Alumno(
-      {required this.nombre,
-      required this.apellidos,
-      required this.numBoscoins,
-      required this.numTareasCompletadas});
 }

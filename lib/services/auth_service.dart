@@ -10,7 +10,70 @@ class AuthService extends ChangeNotifier {
   final String _baseUrl = 'goswapp.allsites.es';
   final storage = const FlutterSecureStorage();
 
-  Future<String?> register(String name, String surname, String email,
+  Future<String?> registerUser(String name, String surname, String email,
+      String password, String mobile, String address, String type) async {
+    final Map<String, dynamic> authData = {
+      'firstname': name,
+      'surname': surname,
+      'email': email,
+      'type': type,
+      'mobile': mobile,
+      'address': address,
+      'password': password,
+    };
+    final url = Uri.http(_baseUrl, '/public/api/register', {});
+
+    final resp = await http.post(url,
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          "Authorization": "Some token"
+        },
+        body: json.encode(authData));
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(decodedResp);
+    if (decodedResp['error'] != null) {
+      return decodedResp['error']['email'].toString();
+    }
+    return null;
+  }
+
+  Future<String?> registerAlumno(
+      String name,
+      String surname,
+      String email,
+      String password,
+      String mobile,
+      String address,
+      String type,
+      int cicleId) async {
+    final Map<String, dynamic> authData = {
+      'firstname': name,
+      'surname': surname,
+      'email': email,
+      'type': type,
+      'mobile': mobile,
+      'address': address,
+      'password': password,
+      'cicle_id': cicleId
+    };
+    final url = Uri.http(_baseUrl, '/public/api/students', {});
+
+    final resp = await http.post(url,
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          "Authorization": "Some token"
+        },
+        body: json.encode(authData));
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    if (decodedResp['error'] != null) {
+      return decodedResp['error']['email'].toString();
+    }
+    return null;
+  }
+
+  Future<String?> registerProfesor(String name, String surname, String email,
       String password, String type, int cicleId) async {
     final Map<String, dynamic> authData = {
       'firstname': name,

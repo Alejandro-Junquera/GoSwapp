@@ -12,6 +12,8 @@ class TeacherService extends ChangeNotifier {
   bool isLoading = true;
   final List<TareaDelCiclo> tareasProf = [];
   final List<SolicitudTarea> solicitudes = [];
+  final List<PerfilP> estudiantesProf = [];
+  final List<ProfesorData> profesor = [];
 
   obtenerTareasDeUnCiclo() async {
     tareasProf.clear();
@@ -204,5 +206,58 @@ class TeacherService extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return null;
+  }
+
+  estudiantesConTareasYBoscoins() async {
+    estudiantesProf.clear();
+    String? token = await AuthService().readToken();
+    String? cicleId = await AuthService().readCicleId();
+    final url = Uri.http(
+        _baseUrl, '/public/api/teachers/$cicleId/studentsWithCompletedTasks');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    var perfilP = PerfilProf.fromJson(decodedResp);
+    for (var i in perfilP.students!) {
+      estudiantesProf.add(i);
+    }
+    isLoading = false;
+    notifyListeners();
+    return perfilP;
+  }
+
+  recuperarPerfil() async {
+    String? token = await AuthService().readToken();
+    String? cicleId = await AuthService().readCicleId();
+    final url = Uri.http(_baseUrl, '/public/api/teachers');
+    isLoading = true;
+    notifyListeners();
+    final resp = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    var allProfesores = Profesores.fromJson(decodedResp);
+
+    for (var i in allProfesores.profesores!) {
+      if (i.cicleId.toString() == cicleId) {
+        profesor.add(i);
+      }
+    }
+    isLoading = false;
+    notifyListeners();
+    return profesor;
   }
 }
