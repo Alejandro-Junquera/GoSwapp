@@ -1,3 +1,5 @@
+export 'package:flutter_aplicacion_ganadora/screens/guia_admin.dart';
+
 export 'package:flutter_aplicacion_ganadora/screens/alumno_perfil.dart';
 export 'package:flutter_aplicacion_ganadora/screens/cliente_perfil.dart';
 export 'package:flutter_aplicacion_ganadora/screens/profesor_perfil.dart';

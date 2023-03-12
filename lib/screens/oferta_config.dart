@@ -302,6 +302,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                         ),
                                         TextButton(
                                           onPressed: () async {
+                                            Navigator.pop(context);
                                             final teacherService =
                                                 Provider.of<TeacherService>(
                                                     context,

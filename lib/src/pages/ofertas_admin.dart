@@ -181,11 +181,16 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                tarea.title.toString(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20,
+                                              Expanded(
+                                                child: Text(
+                                                  tarea.title.toString(),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                  ),
                                                 ),
                                               ),
                                               Padding(

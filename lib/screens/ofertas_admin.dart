@@ -28,6 +28,11 @@ class OfertasAdminScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(context, 'login');
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.pushNamed(context, 'guiaAdmin'),
+              icon: Icon(Icons.info))
+        ],
       ),
       body: const _Ofertas(),
       bottomNavigationBar: const BottomNavigationBarPersonalizadoAdmin(),

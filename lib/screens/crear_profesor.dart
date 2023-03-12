@@ -324,7 +324,7 @@ class _CrearProfresorScreenState extends State<CrearProfresorScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 80, vertical: 15),
                                     child: const Text(
-                                      'Registrarse',
+                                      'Crear',
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
