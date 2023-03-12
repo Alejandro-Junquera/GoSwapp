@@ -135,8 +135,8 @@ class _OfertasAdminPageState extends State<OfertasAdminPage> {
                                             type: QuickAlertType.success,
                                             title: 'Completado',
                                             confirmBtnColor: Colors.blueGrey,
-                                            text:
-                                                '$tarea.title eliminada correctamente',
+                                            text: tarea.title.toString() +
+                                                ' eliminada correctamente',
                                             showCancelBtn: false);
                                       },
                                       child: const Text('Si'),

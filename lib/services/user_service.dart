@@ -48,8 +48,15 @@ class UserService extends ChangeNotifier {
   ) async {
     String? idUser = await AuthService().readId();
     String? token = await AuthService().readToken();
+    Map<String, dynamic>? perfil = await obtenerPerfilUser();
     isLoading = true;
     notifyListeners();
+    if (address == '') {
+      address = perfil!['Usuario']['address'];
+    }
+    if (phone == '') {
+      phone = perfil!['Usuario']['mobile'];
+    }
     final Map<String, String> nuevaTarea = {
       'title': title,
       'description': description,
@@ -57,18 +64,26 @@ class UserService extends ChangeNotifier {
       'client_phone': phone,
       'user_id': idUser.toString(),
     };
+    if (newPictureFile != null) {
+      final url = Uri.http(_baseUrl, '/public/api/tasks');
+      final request = http.MultipartRequest('POST', url)
+        ..headers['Authorization'] = 'Bearer $token'
+        ..headers['Accept'] = 'application/json'
+        ..fields.addAll(nuevaTarea)
+        ..files.add(
+            await http.MultipartFile.fromPath('imagen', newPictureFile!.path));
 
-    final url = Uri.http(_baseUrl, '/public/api/tasks');
-    final request = http.MultipartRequest('POST', url)
-      ..headers['Authorization'] = 'Bearer $token'
-      ..headers['Accept'] = 'application/json'
-      ..fields.addAll(nuevaTarea)
-      ..files.add(
-          await http.MultipartFile.fromPath('imagen', newPictureFile!.path));
+      final response = await http.Response.fromStream(await request.send());
+    } else {
+      final url = Uri.http(_baseUrl, '/public/api/tasks');
+      final request = http.MultipartRequest('POST', url)
+        ..headers['Authorization'] = 'Bearer $token'
+        ..headers['Accept'] = 'application/json'
+        ..fields.addAll(nuevaTarea);
 
-    final response = await http.Response.fromStream(await request.send());
-    print(response.body);
-
+      final response = await http.Response.fromStream(await request.send());
+    }
+    newPictureFile = null;
     isLoading = false;
     notifyListeners();
     return null;

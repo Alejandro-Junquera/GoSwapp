@@ -153,7 +153,8 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
                                     },
                                     validator: (value) {
                                       return (value != null &&
-                                              value.length == 9)
+                                              (value.length == 9 ||
+                                                  value.length == 0))
                                           ? null
                                           : 'El teléfono es inválido';
                                     },
@@ -188,7 +189,8 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
                                     },
                                     validator: (value) {
                                       return (value != null &&
-                                              value.length >= 6)
+                                              (value.length >= 6 ||
+                                                  value.length == 0))
                                           ? null
                                           : 'La dirección tiene que tener mas de 6 caracteres';
                                     },
