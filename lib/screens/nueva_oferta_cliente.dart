@@ -64,6 +64,70 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
           ),
         ),
         Positioned(
+          top: 40,
+          left: MediaQuery.of(context).size.width * 0.85,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            child: IconButton(
+              icon: const Icon(
+                Icons.camera_alt,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                final userService =
+                    Provider.of<UserService>(context, listen: false);
+
+                final ImagePicker _picker = ImagePicker();
+                final XFile? photo =
+                    await _picker.pickImage(source: ImageSource.camera);
+
+                if (photo == null) {
+                  print("no se ha elegido imagen");
+                  return;
+                }
+                setState(() {
+                  image = photo.path;
+                });
+                userService.updateImage(photo.path);
+              },
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 145,
+          left: MediaQuery.of(context).size.width * 0.85,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            child: IconButton(
+              icon: const Icon(
+                Icons.image_search,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                final userService =
+                    Provider.of<UserService>(context, listen: false);
+
+                final ImagePicker _picker = ImagePicker();
+                final XFile? photo =
+                    await _picker.pickImage(source: ImageSource.gallery);
+
+                if (photo == null) {
+                  print("no se ha elegido imagen");
+                  return;
+                }
+                setState(() {
+                  image = photo.path;
+                });
+                userService.updateImage(photo.path);
+              },
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Positioned(
             bottom: 25,
             left: 15,
             right: 15,
@@ -283,31 +347,6 @@ class _NuevaOfertaClienteScreenState extends State<NuevaOfertaClienteScreen> {
                     )),
               ),
             )),
-        Positioned(
-          top: 18,
-          right: MediaQuery.of(context).size.width / 7,
-          child: IconButton(
-            icon: const Icon(Icons.camera_alt),
-            onPressed: () async {
-              final userService =
-                  Provider.of<UserService>(context, listen: false);
-
-              final ImagePicker _picker = ImagePicker();
-              final XFile? photo =
-                  await _picker.pickImage(source: ImageSource.camera);
-
-              if (photo == null) {
-                print("no se ha elegido imagen");
-                return;
-              }
-              setState(() {
-                image = photo.path;
-              });
-              userService.updateImage(photo.path);
-            },
-            color: Colors.white,
-          ),
-        ),
       ]),
     );
   }

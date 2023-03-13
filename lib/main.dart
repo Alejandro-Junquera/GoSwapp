@@ -90,7 +90,9 @@ class MyApp extends StatelessWidget {
             'perfilProfesor': (_) => const ProfesorPerfilScreen(),
             'perfilAlumno': (_) => const AlumnoPerfilScreen(),
             'perfilCliente': (_) => const ClientePerfilScreen(),
-            'guiaAdmin': (_) => const GuiaAdmin(),
+            'guiaAdmin': (_) => const GuiaAdminScreen(),
+            'guiaUser': (_) => const GuiaUserScreen(),
+            'guiaProfesor': (_) => const GuiaProfesorScreen(),
           },
           theme: ThemeData.light()
               .copyWith(scaffoldBackgroundColor: Colors.grey[200])),

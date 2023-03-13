@@ -30,7 +30,9 @@ class AlumnoService extends ChangeNotifier {
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
     var tareasAlumno = TareasAlumno.fromJson(decodedResp);
+    print(decodedResp);
     String boscoins = decodedResp['estudiante']['boscoins'].toString();
+
     info.add(tareasAlumno.estudiante!);
     for (var i in tareasAlumno.tareas!) {
       if (i.grade != 'null') {
@@ -68,8 +70,9 @@ class AlumnoService extends ChangeNotifier {
   }
 
   obtenerPerfilAlumno() async {
+    perfil.clear();
     String? token = await AuthService().readToken();
-    String? cicleId = await AuthService().readCicleId();
+    String? id = await AuthService().readId();
     final url = Uri.http(_baseUrl, '/public/api/students');
     isLoading = true;
     notifyListeners();
@@ -85,7 +88,7 @@ class AlumnoService extends ChangeNotifier {
     var allAlumnos = Alumnos.fromJson(decodedResp);
 
     for (var i in allAlumnos.estudiantes!) {
-      if (i.cicleId.toString() == cicleId) {
+      if (i.userId.toString() == id) {
         perfil.add(i);
       }
     }

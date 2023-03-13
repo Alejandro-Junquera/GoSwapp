@@ -25,10 +25,8 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
     // TODO: implement initState
 
     super.initState();
-    Future.delayed(
-      Duration(milliseconds: 50),
-      () => obtenerPerfil(),
-    );
+
+    obtenerPerfil();
   }
 
   @override
@@ -85,7 +83,7 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
                       Text(
                         perfil[0].boscoins != null
                             ? perfil[0].boscoins.toString()
-                            : '',
+                            : '0',
                         style: TextStyle(fontSize: 18),
                       ),
                     ],

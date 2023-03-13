@@ -108,14 +108,14 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
                         padding: const EdgeInsets.only(bottom: 5),
                         child: ListTile(
                           tileColor: tarea.completionDate != null
-                              ? Colors.green[50]
+                              ? Colors.red[50]
                               : Colors.yellow[50],
                           shape: RoundedRectangleBorder(
                               side: BorderSide(
                                   width: 1,
                                   color: tarea.completionDate != null
-                                      ? Colors.green
-                                      : Colors.yellow)),
+                                      ? Colors.red
+                                      : Colors.orange)),
                           onTap: () {
                             Navigator.pushReplacement(
                                 context,
@@ -128,7 +128,7 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
                             children: [
                               Text(tarea.title.toString()),
                               const Spacer(),
-                              const Text('falta info Api'),
+                              const Text(''),
                               const Icon(Icons.person_outline)
                             ],
                           ),

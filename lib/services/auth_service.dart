@@ -175,7 +175,7 @@ class AuthService extends ChangeNotifier {
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
     var profesores = Profesores.fromJson(decodedResp);
     for (var i in profesores.profesores!) {
-      if (i.id == int.parse(idUser!)) {
+      if (i.userId == int.parse(idUser!)) {
         return i.cicleId.toString();
       }
     }

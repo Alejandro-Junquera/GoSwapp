@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/src/widgets/slideshow.dart';
 
-class GuiaAdminScreen extends StatelessWidget {
-  const GuiaAdminScreen({super.key});
+class GuiaProfesorScreen extends StatelessWidget {
+  const GuiaProfesorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_1.jpeg')),
+                        child: Image.asset('assets/images/guia/prof_8.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'En esta ventana se podrá ver una lista con todas las tareas que aún no tiene asignado un ciclo.',
+                        'En la ventana aparecerá una lista de las tareas pertenecientes al ciclo del profesor que aún no tienen asignada una dificultad.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -41,26 +41,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_2.jpeg')),
+                        child: Image.asset('assets/images/guia/prof_7.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Pulsando en el icono superior derecho se mostrará la descripción de la tarea para decidiar qué ciclo asignarle.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_3.jpeg')),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        'Para elegir un ciclo se pulsa en "Seleccione un ciclo" y se selecciona una entre las opciones disponibles.',
+                        'Si pulsas una de las opciones de la lista se abrirá un desplegable con la información de la tarea.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -71,41 +56,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.63,
-                        child: Image.asset('assets/images/guia/admin_4.jpeg')),
+                        child: Image.asset('assets/images/guia/prof_6.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Para publicar una tarea se pulsa el botón verde, en el caso de que la tarea no sea adecuada se podrá eliminar pulsando el botón rojo.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_5.jpeg')),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        'En esta ventana se podrá ver una lista de todos los profesores.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_6.jpeg')),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        'Se podrá editar un profesor (botón azul), eliminar (boton rojo) o crear un nuevo profesor (botón inferior derecho).',
+                        'Una vez elegida una dificultad apropiada, pulsando el botón verde se publicará la tarea, en caso de querer eliminarla por no ser apta, se pulsará el botón rojo.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -116,11 +71,71 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.63,
-                        child: Image.asset('assets/images/guia/admin_7.jpeg')),
+                        child: Image.asset('assets/images/guia/prof_5.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Una vez pulsado el botón de crear profesor, se rellenarán los datos personales y se le asignará un ciclo. Para finalizar se pulsará el botón "Crear"',
+                        'En esta ventana aparece una lista de las tareas ya publicadas pudiendo filtrarlas entre las finalizadas y las que están en proceso',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.585,
+                        child: Image.asset('assets/images/guia/prof_4.jpeg')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        'Podremos enviar un mensaje automático al cliente que ha solicitado la tarea  pulsando en el icono superior derecho, si pulsamos el icono de ubicación se nos abrirá un mapa interactivo que nos mostrará cómo llegar a la ubicación del usuario,',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.65,
+                        child: Image.asset('assets/images/guia/prof_3.jpeg')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        'Para asignar una tarea a un alumno sólo habrá que pulsar el botón verde, y para desasignarselo se pulsará el botón rojo.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.65,
+                        child: Image.asset('assets/images/guia/prof_2.jpeg')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        'Una vez finalizada la tarea nos aparecerá la valoración del cliente.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: Image.asset('assets/images/guia/prof_1.jpeg')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        'En el perfil se podrá ver a parte de los datos personales una lista de todos los alumnos del ciclo al que pertenece junto con el número de tareas que ha finalizado y el número de boscoins que tenen.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),

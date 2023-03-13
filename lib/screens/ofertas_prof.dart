@@ -29,6 +29,9 @@ class OfertasProfScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
+              onPressed: () => Navigator.pushNamed(context, 'guiaProfesor'),
+              icon: Icon(Icons.info)),
+          IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'perfilProfesor');
               },

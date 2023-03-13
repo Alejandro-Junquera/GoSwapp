@@ -88,6 +88,11 @@ class _ClienteScreenState extends State<ClienteScreen> {
         actions: [
           IconButton(
               onPressed: () {
+                Navigator.pushNamed(context, 'guiaUser');
+              },
+              icon: Icon(Icons.info)),
+          IconButton(
+              onPressed: () {
                 Navigator.pushNamed(context, 'perfilCliente');
               },
               icon: Icon(Icons.manage_accounts))

@@ -29,6 +29,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
   String boscoins = '';
 
   Color? colorBorde;
+  Color? colorFondo;
   obtenerTareasAlumno() async {
     final alumnoService = Provider.of<AlumnoService>(context, listen: false);
     boscoins = await alumnoService.getTareas();
@@ -70,7 +71,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
             'Ofertas Alumno',
           )),
           actions: [
-            Center(child: Text(boscoins)),
+            Center(child: Text(boscoins == 'null' ? '0' : boscoins)),
             SizedBox(
               width: 5,
             ),
@@ -162,6 +163,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: tareas.length,
                 itemBuilder: ((context, index) {
+                  bool verValoracion = false;
                   var tareaAsignada = tareasAsignadas.singleWhere(
                       (element) => element.taskId == tareas[index].taskId,
                       orElse: () {
@@ -169,16 +171,24 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                   });
                   if (tareas[index].completionDate != null) {
                     colorBorde = Colors.red;
+                    colorFondo = Colors.red[50];
+                    if (tareaAsignada.completedAt == null &&
+                        tareaAsignada.assignedAt != null) {
+                      verValoracion = true;
+                    }
                   } else {
                     if (tareaAsignada.taskId == null) {
                       colorBorde = Colors.grey;
+                      colorFondo = Colors.grey[300];
                     } else {
                       if (tareaAsignada.completedAt == null &&
                           tareaAsignada.assignedAt == null) {
-                        colorBorde = Colors.amber;
+                        colorBorde = Colors.orange;
+                        colorFondo = Colors.orange[50];
                       } else if (tareaAsignada.completedAt == null &&
                           tareaAsignada.assignedAt != null) {
                         colorBorde = Colors.green;
+                        colorFondo = Colors.green[50];
                       }
                     }
                   }
@@ -192,7 +202,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                       child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: colorBorde!, width: 1.5),
-                            color: Colors.grey[350],
+                            color: colorFondo,
                             borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(30),
                                 bottomLeft: Radius.circular(30)),
@@ -204,104 +214,119 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                 padding: EdgeInsets.only(top: 30, bottom: 30),
                                 child: Text(
                                   tareas[index].title.toString(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      fontSize: 30,
+                                      fontSize: 26,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: DropCapText(
-                                  textAlign: TextAlign.justify,
-                                  style: const TextStyle(
-                                    fontSize: 18,
+                                child: SizedBox(
+                                  height: 250,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: DropCapText(
+                                    maxLines: 13,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.justify,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                    tareas[index].description.toString(),
+                                    dropCap: DropCap(
+                                        width: 150,
+                                        height: 150,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(30),
+                                                bottomLeft:
+                                                    Radius.circular(30)),
+                                            child: tareas[index].imagen != null
+                                                ? Image.network(
+                                                    'https://goswapp.allsites.es/storage/app/public/' +
+                                                        tareas[index]
+                                                            .imagen
+                                                            .toString(),
+                                                    loadingBuilder: (BuildContext
+                                                            context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          value: loadingProgress
+                                                                      .expectedTotalBytes !=
+                                                                  null
+                                                              ? loadingProgress
+                                                                      .cumulativeBytesLoaded /
+                                                                  loadingProgress
+                                                                      .expectedTotalBytes!
+                                                              : null,
+                                                        ),
+                                                      );
+                                                    },
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    "assets/images/no-image.jpg",
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
+                                        )),
                                   ),
-                                  tareas[index].description.toString(),
-                                  dropCap: DropCap(
-                                      width: 150,
-                                      height: 150,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(30),
-                                              bottomLeft: Radius.circular(30)),
-                                          child: tareas[index].imagen != null
-                                              ? Image.network(
-                                                  'https://goswapp.allsites.es/storage/app/public/' +
-                                                      tareas[index]
-                                                          .imagen
-                                                          .toString(),
-                                                  loadingBuilder:
-                                                      (BuildContext context,
-                                                          Widget child,
-                                                          ImageChunkEvent?
-                                                              loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    }
-                                                    return Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        value: loadingProgress
-                                                                    .expectedTotalBytes !=
-                                                                null
-                                                            ? loadingProgress
-                                                                    .cumulativeBytesLoaded /
-                                                                loadingProgress
-                                                                    .expectedTotalBytes!
-                                                            : null,
-                                                      ),
-                                                    );
-                                                  },
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : Image.asset(
-                                                  "assets/images/no-image.jpg",
-                                                  fit: BoxFit.cover,
-                                                ),
-                                        ),
-                                      )),
                                 ),
                               ),
-                              SizedBox(
-                                height: 40,
-                              ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Fecha publicacion:  ' +
-                                        tareas[index]
-                                            .createdAt
-                                            .toString()
-                                            .substring(0, 11),
-                                    style: TextStyle(fontSize: 15),
+                                  Visibility(
+                                    visible: verValoracion,
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.comment_bank,
+                                          color: Colors.blueGrey[800],
+                                          size: 50),
+                                    ),
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    tareas[index].completionDate != null
-                                        ? 'Fecha finalizacion: ' +
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Fecha publicacion:  ' +
                                             tareas[index]
-                                                .completionDate
-                                                .toString() +
-                                            ' '
-                                        : '',
-                                    style: TextStyle(fontSize: 15),
+                                                .createdAt
+                                                .toString()
+                                                .substring(0, 11),
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        tareas[index].completionDate != null
+                                            ? 'Fecha finalizacion: ' +
+                                                tareas[index]
+                                                    .completionDate
+                                                    .toString() +
+                                                ' '
+                                            : '',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                               Text(
                                 'Direccion',
@@ -309,7 +334,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                     fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                               Text(
                                 tareas[index].clientAddress.toString(),
@@ -317,7 +342,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               SizedBox(
-                                height: 20,
+                                height: 5,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -348,9 +373,9 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                     itemCount: 5,
                                     itemPadding: const EdgeInsets.symmetric(
                                         horizontal: 4.0),
-                                    itemBuilder: (context, _) => const Icon(
+                                    itemBuilder: (context, _) => Icon(
                                         Icons.star,
-                                        color: Colors.yellow),
+                                        color: Colors.yellow[700]),
                                     rating: double.parse(tareas[index].grade!),
                                   ),
                                   Padding(

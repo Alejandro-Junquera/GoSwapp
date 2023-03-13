@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/src/widgets/slideshow.dart';
 
-class GuiaAdminScreen extends StatelessWidget {
-  const GuiaAdminScreen({super.key});
+class GuiaUserScreen extends StatelessWidget {
+  const GuiaUserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_1.jpeg')),
+                        child: Image.asset('assets/images/guia/user_1.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'En esta ventana se podrá ver una lista con todas las tareas que aún no tiene asignado un ciclo.',
+                        'En esta ventana se muestra una lista con todas las tareas del usuario ',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -41,11 +41,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_2.jpeg')),
+                        child: Image.asset('assets/images/guia/user_2.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Pulsando en el icono superior derecho se mostrará la descripción de la tarea para decidiar qué ciclo asignarle.',
+                        'El color de borde de las tarjetas indican los diferentes estados en los que puede encontrarse una tarea.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -56,11 +56,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_3.jpeg')),
+                        child: Image.asset('assets/images/guia/user_3.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Para elegir un ciclo se pulsa en "Seleccione un ciclo" y se selecciona una entre las opciones disponibles.',
+                        'Pulsando sobre la imagen podremos ver toda la informacion referente a la tarea',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -71,11 +71,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.63,
-                        child: Image.asset('assets/images/guia/admin_4.jpeg')),
+                        child: Image.asset('assets/images/guia/user_4.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Para publicar una tarea se pulsa el botón verde, en el caso de que la tarea no sea adecuada se podrá eliminar pulsando el botón rojo.',
+                        'Una vez finalizada la tarea, el usuario podrá valorar el trabajo de los alumnos',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -86,11 +86,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_5.jpeg')),
+                        child: Image.asset('assets/images/guia/user_5.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'En esta ventana se podrá ver una lista de todos los profesores.',
+                        'El usuario podrá crear tareas, los campos imagen, dirección y telefono son opcionales.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
@@ -101,26 +101,11 @@ class GuiaAdminScreen extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
-                        child: Image.asset('assets/images/guia/admin_6.jpeg')),
+                        child: Image.asset('assets/images/guia/user_6.jpeg')),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Se podrá editar un profesor (botón azul), eliminar (boton rojo) o crear un nuevo profesor (botón inferior derecho).',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.63,
-                        child: Image.asset('assets/images/guia/admin_7.jpeg')),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        'Una vez pulsado el botón de crear profesor, se rellenarán los datos personales y se le asignará un ciclo. Para finalizar se pulsará el botón "Crear"',
+                        'Pulsando el boton superior derecho podremos acceder a nuestro perfil con todos nuestros datos',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),

@@ -31,7 +31,9 @@ class TeacherService extends ChangeNotifier {
       },
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(resp.body);
     var tareasUser = TareasDelCiclo.fromJson(decodedResp);
+    print(decodedResp);
     for (var i in tareasUser.tareasDelCiclo!) {
       if (i.grade == null) {
         tareasProf.add(i);
@@ -58,7 +60,7 @@ class TeacherService extends ChangeNotifier {
       },
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-
+    print(resp.body);
     var tareasUser = TareasDelCiclo.fromJson(decodedResp);
     for (var i in tareasUser.tareasDelCiclo!) {
       if (i.grade != null) {
@@ -235,6 +237,7 @@ class TeacherService extends ChangeNotifier {
   }
 
   recuperarPerfil() async {
+    profesor.clear();
     String? token = await AuthService().readToken();
     String? cicleId = await AuthService().readCicleId();
     final url = Uri.http(_baseUrl, '/public/api/teachers');
