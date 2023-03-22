@@ -183,7 +183,7 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                                         ' solicitada correctamente',
                                     confirmBtnText: 'Vale');
                                 await teacherService.asignarDificultadTarea(
-                                    dificultad, tarea.id!);
+                                    dificultad, tarea.taskId!);
 
                                 listaOfertasSinDificultad.removeAt(index);
                               }
@@ -219,8 +219,8 @@ class _OfertasGlobalesPageState extends State<OfertasGlobalesPage> {
                                                       context,
                                                       listen: false);
                                               Navigator.pop(context);
-                                              teacherService
-                                                  .eliminarUnaTarea(tarea.id!);
+                                              teacherService.eliminarUnaTarea(
+                                                  tarea.taskId!);
                                               setState(() {
                                                 listaOfertasSinDificultad
                                                     .removeAt(index);

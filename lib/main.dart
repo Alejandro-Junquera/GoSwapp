@@ -1,4 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:flutter_aplicacion_ganadora/screens/guia_alumno.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,6 +94,7 @@ class MyApp extends StatelessWidget {
             'guiaAdmin': (_) => const GuiaAdminScreen(),
             'guiaUser': (_) => const GuiaUserScreen(),
             'guiaProfesor': (_) => const GuiaProfesorScreen(),
+            'guiaAlumno': (_) => const GuiaAlumnoScreen(),
           },
           theme: ThemeData.light()
               .copyWith(scaffoldBackgroundColor: Colors.grey[200])),

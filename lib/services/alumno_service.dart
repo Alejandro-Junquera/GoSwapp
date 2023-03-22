@@ -16,6 +16,7 @@ class AlumnoService extends ChangeNotifier {
   getTareas() async {
     tareas.clear();
     tareasAsignadas.clear();
+    info.clear();
     String? token = await AuthService().readToken();
     final url = Uri.http(_baseUrl, '/public/api/task-assignments/cicle');
     isLoading = true;
@@ -63,6 +64,7 @@ class AlumnoService extends ChangeNotifier {
       },
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(resp.body);
     print(decodedResp);
     isLoading = false;
     notifyListeners();

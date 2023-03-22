@@ -7,7 +7,7 @@ class TareasDelCiclo {
     if (json['Tareas del ciclo'] != null) {
       tareasDelCiclo = <TareaDelCiclo>[];
       json['Tareas del ciclo'].forEach((v) {
-        tareasDelCiclo!.add(TareaDelCiclo.fromJson(v));
+        tareasDelCiclo!.add(new TareaDelCiclo.fromJson(v));
       });
     }
   }
@@ -23,7 +23,7 @@ class TareasDelCiclo {
 }
 
 class TareaDelCiclo {
-  int? id;
+  int? taskId;
   String? title;
   int? numBoscoins;
   String? description;
@@ -38,9 +38,10 @@ class TareaDelCiclo {
   String? clientAddress;
   String? clientPhone;
   String? clientRating;
+  int? requestCount;
 
   TareaDelCiclo(
-      {this.id,
+      {this.taskId,
       this.title,
       this.numBoscoins,
       this.description,
@@ -54,10 +55,11 @@ class TareaDelCiclo {
       this.comment,
       this.clientAddress,
       this.clientPhone,
-      this.clientRating});
+      this.clientRating,
+      this.requestCount});
 
   TareaDelCiclo.fromJson(Map<String, dynamic> json) {
-    id = json['task_id'];
+    taskId = json['task_id'];
     title = json['title'];
     numBoscoins = json['num_boscoins'];
     description = json['description'];
@@ -72,11 +74,12 @@ class TareaDelCiclo {
     clientAddress = json['client_address'];
     clientPhone = json['client_phone'];
     clientRating = json['client_rating'];
+    requestCount = json['request_count'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['task_id'] = this.id;
+    data['task_id'] = this.taskId;
     data['title'] = this.title;
     data['num_boscoins'] = this.numBoscoins;
     data['description'] = this.description;
@@ -91,6 +94,7 @@ class TareaDelCiclo {
     data['client_address'] = this.clientAddress;
     data['client_phone'] = this.clientPhone;
     data['client_rating'] = this.clientRating;
+    data['request_count'] = this.requestCount;
     return data;
   }
 }

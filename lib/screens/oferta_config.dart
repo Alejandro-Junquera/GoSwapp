@@ -27,7 +27,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
   @override
   void initState() {
     super.initState();
-    obtenerSolicitudes(widget.tarea.id!);
+    obtenerSolicitudes(widget.tarea.taskId!);
   }
 
   whatsapp(String phone, String tarea) async {
@@ -116,14 +116,16 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                         setState(() {
                                           alumno.assignedAt = 'Fecha';
                                         });
-                                        obtenerSolicitudes(widget.tarea.id!);
+                                        obtenerSolicitudes(
+                                            widget.tarea.taskId!);
                                       } else {
                                         await teacherService
                                             .asignarTarea(alumno.id!);
                                         setState(() {
                                           alumno.assignedAt = null;
                                         });
-                                        obtenerSolicitudes(widget.tarea.id!);
+                                        obtenerSolicitudes(
+                                            widget.tarea.taskId!);
                                       }
                                     },
                                     children: const [
@@ -186,7 +188,8 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                   itemBuilder: (context, _) => const Icon(
                                       Icons.favorite,
                                       color: Colors.red),
-                                  rating: 4.5, //TODO: NUMERO CAMBIABLE
+                                  rating:
+                                      double.parse(widget.tarea.clientRating!),
                                 ),
                               ]),
                             ),
@@ -221,7 +224,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                                     context,
                                                     listen: false);
                                             teacherService.eliminarUnaTarea(
-                                                widget.tarea.id!);
+                                                widget.tarea.taskId!);
 
                                             Navigator.pushReplacementNamed(
                                                 context, 'initProf');
@@ -261,7 +264,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                                     context,
                                                     listen: false);
                                             teacherService.finalizarTarea(
-                                                widget.tarea.id!);
+                                                widget.tarea.taskId!);
                                             setState(() {
                                               widget.tarea.completionDate = '-';
                                             });
@@ -309,7 +312,7 @@ class _OfertaConfigScreenState extends State<OfertaConfigScreen> {
                                                     listen: false);
                                             await teacherService
                                                 .eliminarUnaTarea(
-                                                    widget.tarea.id!);
+                                                    widget.tarea.taskId!);
                                             Navigator.pushReplacementNamed(
                                                 context, 'initProf');
                                           },

@@ -128,7 +128,9 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
                             children: [
                               Text(tarea.title.toString()),
                               const Spacer(),
-                              const Text(''),
+                              Text(tarea.requestCount != null
+                                  ? tarea.requestCount.toString()
+                                  : '0'),
                               const Icon(Icons.person_outline)
                             ],
                           ),

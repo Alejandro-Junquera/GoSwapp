@@ -85,6 +85,11 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
             ),
             IconButton(
                 onPressed: () {
+                  Navigator.pushNamed(context, 'guiaAlumno');
+                },
+                icon: Icon(Icons.info)),
+            IconButton(
+                onPressed: () {
                   Navigator.pushNamed(context, 'perfilAlumno');
                 },
                 icon: Icon(Icons.manage_accounts))
@@ -292,7 +297,150 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                   Visibility(
                                     visible: verValoracion,
                                     child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        tareas[index].comment != null &&
+                                                tareas[index].clientRating! > 3
+                                            ? showDialog(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.grey[300],
+                                                    title: RatingBar.builder(
+                                                      ignoreGestures: true,
+                                                      initialRating:
+                                                          double.parse(
+                                                              tareas[index]
+                                                                  .clientRating
+                                                                  .toString()),
+                                                      minRating: 1,
+                                                      direction:
+                                                          Axis.horizontal,
+                                                      allowHalfRating: false,
+                                                      itemCount: 5,
+                                                      itemPadding:
+                                                          const EdgeInsets
+                                                                  .symmetric(
+                                                              horizontal: 4.0),
+                                                      itemBuilder: (context,
+                                                              _) =>
+                                                          const Icon(
+                                                              Icons.favorite,
+                                                              color:
+                                                                  Colors.red),
+                                                      onRatingUpdate:
+                                                          (rating) {},
+                                                    ),
+                                                    content: Text(
+                                                      tareas[index]
+                                                          .comment
+                                                          .toString(),
+                                                    ),
+                                                    actions: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      600],
+                                                                  borderRadius:
+                                                                      BorderRadius.only(
+                                                                          topLeft:
+                                                                              Radius.circular(60))),
+                                                              height: 60,
+                                                              width: 60,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            15,
+                                                                        top:
+                                                                            15),
+                                                                child:
+                                                                    IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .cancel_outlined,
+                                                                    size: 30,
+                                                                    color: Colors
+                                                                        .white60,
+                                                                  ),
+                                                                ),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              )
+                                            : showDialog(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.grey[300],
+                                                    title: Text(
+                                                        'No hay valoraciones disponibles'),
+                                                    actions: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      600],
+                                                                  borderRadius:
+                                                                      BorderRadius.only(
+                                                                          topLeft:
+                                                                              Radius.circular(60))),
+                                                              height: 60,
+                                                              width: 60,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            15,
+                                                                        top:
+                                                                            15),
+                                                                child:
+                                                                    IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .cancel_outlined,
+                                                                    size: 30,
+                                                                    color: Colors
+                                                                        .white60,
+                                                                  ),
+                                                                ),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                      },
                                       icon: Icon(Icons.comment_bank,
                                           color: Colors.blueGrey[800],
                                           size: 50),
