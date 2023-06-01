@@ -11,22 +11,62 @@ class AlumnoPerfilScreen extends StatefulWidget {
 }
 
 class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
-  List<AlumnoPerfilData> perfil = [];
+  List<AlumnoPerfilData>? perfil;
+  AlumnoPerfilData? originalPerfil;
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+
   obtenerPerfil() async {
     final alumnoService = Provider.of<AlumnoService>(context, listen: false);
     await alumnoService.obtenerPerfilAlumno();
     setState(() {
       perfil = alumnoService.perfil;
+      originalPerfil = AlumnoPerfilData.fromJson(perfil![0].toJson());
+      firstNameController.text = perfil![0].firstname ?? '';
+      lastNameController.text = perfil![0].surname ?? '';
+      emailController.text = perfil![0].email ?? '';
+      mobileController.text = perfil![0].mobile ?? '';
+      addressController.text = perfil![0].address ?? '';
     });
+  }
+
+  void actualizarPerfil() {
+    // Verificar si hubo cambios
+    if (originalPerfil!.firstname != firstNameController.text ||
+        originalPerfil!.surname != lastNameController.text ||
+        originalPerfil!.email != emailController.text ||
+        originalPerfil!.mobile != mobileController.text ||
+        originalPerfil!.address != addressController.text) {
+      // Aquí se debe llamar a la función para actualizar el perfil con los nuevos valores
+      // Por ejemplo:
+      // final alumnoService = Provider.of<AlumnoService>(context, listen: false);
+      // alumnoService.actualizarPerfil(
+      //  firstName: firstNameController.text,
+      //  lastName: lastNameController.text,
+      //  email: emailController.text,
+      //  mobile: mobileController.text,
+      //  address: addressController.text,
+      //);
+    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
-
     obtenerPerfil();
+  }
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    mobileController.dispose();
+    addressController.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,6 +79,22 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
         backgroundColor: Colors.blueGrey[800],
         centerTitle: true,
         title: const Text("Perfil"),
+        actions: [
+          !alumnoService.editProfile
+              ? IconButton(
+                  onPressed: () {
+                    alumnoService.isEditable();
+                    print(alumnoService.editProfile);
+                  },
+                  icon: Icon(Icons.edit))
+              : IconButton(
+                  onPressed: () {
+                    actualizarPerfil();
+                    alumnoService.isEditable();
+                    print(alumnoService.editProfile);
+                  },
+                  icon: Icon(Icons.done))
+        ],
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
@@ -81,8 +137,8 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
                         width: 20,
                       ),
                       Text(
-                        perfil[0].boscoins != null
-                            ? perfil[0].boscoins.toString()
+                        perfil![0].boscoins != null
+                            ? perfil![0].boscoins.toString()
                             : '0',
                         style: TextStyle(fontSize: 18),
                       ),
@@ -98,23 +154,33 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            readOnly: true,
-            controller: TextEditingController()
-              ..text = perfil[0].firstname != null
-                  ? perfil[0].firstname.toString() +
-                      ' ' +
-                      perfil[0].surname.toString()
-                  : '',
-            maxLines: 1,
-            decoration: const InputDecoration(
-                disabledBorder: OutlineInputBorder(),
-                enabled: false,
-                label: Text('Nombre Completo',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.blueGrey))),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: alumnoService.editProfile ? false : true,
+                  controller: firstNameController,
+                  maxLines: 1,
+                  decoration: InputDecoration(
+                      disabledBorder: OutlineInputBorder(),
+                      label: Text('Nombre')),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  readOnly: alumnoService.editProfile ? false : true,
+                  controller: lastNameController,
+                  maxLines: 1,
+                  decoration: const InputDecoration(
+                      disabledBorder: OutlineInputBorder(),
+                      label: Text('Apellidos',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.blueGrey))),
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -123,14 +189,11 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
-            readOnly: true,
-            controller: TextEditingController()
-              ..text =
-                  perfil[0].email != null ? perfil[0].email.toString() : '',
+            readOnly: alumnoService.editProfile ? false : true,
+            controller: emailController,
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
-                enabled: false,
                 label: Text('Email',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -147,15 +210,11 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.50,
               child: TextField(
-                  readOnly: true,
-                  controller: TextEditingController()
-                    ..text = perfil[0].mobile != null
-                        ? perfil[0].mobile.toString()
-                        : '',
+                  readOnly: alumnoService.editProfile ? false : true,
+                  controller: mobileController,
                   maxLines: 1,
                   decoration: const InputDecoration(
                       disabledBorder: OutlineInputBorder(),
-                      enabled: false,
                       prefixIcon: Icon(
                         Icons.phone,
                         color: Colors.blueGrey,
@@ -166,8 +225,8 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
               child: TextField(
                 readOnly: true,
                 controller: TextEditingController()
-                  ..text = perfil[0].cicleName != null
-                      ? perfil[0].cicleName.toString()
+                  ..text = perfil![0].cicleName != null
+                      ? perfil![0].cicleName.toString()
                       : '',
                 maxLines: 1,
                 decoration: const InputDecoration(
@@ -188,14 +247,11 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
-            readOnly: true,
-            controller: TextEditingController()
-              ..text =
-                  perfil[0].address != null ? perfil[0].address.toString() : '',
+            readOnly: alumnoService.editProfile ? false : true,
+            controller: addressController,
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
-                enabled: false,
                 prefixIcon: Icon(
                   Icons.home,
                   color: Colors.blueGrey,

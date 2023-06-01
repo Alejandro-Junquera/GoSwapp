@@ -441,7 +441,7 @@ class _AlumnoScreenState extends State<AlumnoScreen> {
                                                 },
                                               );
                                       },
-                                      icon: Icon(Icons.comment_bank,
+                                      icon: Icon(Icons.mode_comment,
                                           color: Colors.blueGrey[800],
                                           size: 50),
                                     ),

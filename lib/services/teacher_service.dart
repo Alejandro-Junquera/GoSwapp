@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:http/http.dart' as http;
+
 import '../models/models.dart';
 
 class TeacherService extends ChangeNotifier {
@@ -14,6 +15,16 @@ class TeacherService extends ChangeNotifier {
   final List<SolicitudTarea> solicitudes = [];
   final List<PerfilP> estudiantesProf = [];
   final List<ProfesorData> profesor = [];
+  bool editProfile = false;
+
+  isEditable() {
+    if (editProfile == false) {
+      editProfile = true;
+    } else {
+      editProfile = false;
+    }
+    notifyListeners();
+  }
 
   obtenerTareasDeUnCiclo() async {
     tareasProf.clear();

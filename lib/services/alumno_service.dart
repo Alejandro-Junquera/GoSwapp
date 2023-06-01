@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import '../models/models.dart';
 import 'auth_service.dart';
 
@@ -12,6 +13,18 @@ class AlumnoService extends ChangeNotifier {
   List<TareasAsignadasAlumno> tareasAsignadas = [];
   List<AlumnoPerfilData> perfil = [];
   bool isLoading = true;
+
+  bool editProfile = false;
+  AlumnoPerfilData? alumnoAEditar;
+
+  isEditable() {
+    if (editProfile == false) {
+      editProfile = true;
+    } else {
+      editProfile = false;
+    }
+    notifyListeners();
+  }
 
   getTareas() async {
     tareas.clear();
@@ -92,6 +105,7 @@ class AlumnoService extends ChangeNotifier {
     for (var i in allAlumnos.estudiantes!) {
       if (i.userId.toString() == id) {
         perfil.add(i);
+        alumnoAEditar = i;
       }
     }
     isLoading = false;

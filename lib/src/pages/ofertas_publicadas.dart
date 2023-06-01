@@ -128,10 +128,18 @@ class _OfertasPublicadasPageState extends State<OfertasPublicadasPage> {
                             children: [
                               Text(tarea.title.toString()),
                               const Spacer(),
-                              Text(tarea.requestCount != null
-                                  ? tarea.requestCount.toString()
-                                  : '0'),
-                              const Icon(Icons.person_outline)
+                              tarea.clientRating == null
+                                  ? Text(tarea.requestCount != null
+                                      ? tarea.requestCount.toString()
+                                      : '0')
+                                  : Text(''),
+                              tarea.clientRating == null
+                                  ? const Icon(Icons.person_outline)
+                                  : double.parse(tarea.clientRating!) < 3
+                                      ? const Icon(
+                                          Icons.sentiment_dissatisfied_sharp)
+                                      : const Icon(
+                                          Icons.sentiment_satisfied_alt_sharp)
                             ],
                           ),
                           trailing: const Icon(Icons.keyboard_arrow_right),

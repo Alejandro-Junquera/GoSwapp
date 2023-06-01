@@ -13,12 +13,44 @@ class ProfesorPerfilScreen extends StatefulWidget {
 class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
   List<PerfilP> estudiantesProf = [];
   List<ProfesorData> profesor = [];
+  PerfilP? originalPerfil;
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   obtenerEstudiantes() async {
     final teacherService = Provider.of<TeacherService>(context, listen: false);
     await teacherService.estudiantesConTareasYBoscoins();
     setState(() {
       estudiantesProf = teacherService.estudiantesProf;
+      originalPerfil = PerfilP.fromJson(profesor![0].toJson());
+      firstNameController.text = profesor[0].firstname ?? '';
+      lastNameController.text = profesor[0].surname ?? '';
+      emailController.text = profesor[0].email ?? '';
+      mobileController.text = profesor[0].mobile ?? '';
+      addressController.text = profesor[0].address ?? '';
     });
+  }
+
+  void actualizarPerfil() {
+    // Verificar si hubo cambios
+    if (originalPerfil!.firstname != firstNameController.text ||
+        originalPerfil!.surname != lastNameController.text ||
+        originalPerfil!.email != emailController.text ||
+        originalPerfil!.mobile != mobileController.text ||
+        originalPerfil!.address != addressController.text) {
+      // Aquí se debe llamar a la función para actualizar el perfil con los nuevos valores
+      // Por ejemplo:
+      // final alumnoService = Provider.of<AlumnoService>(context, listen: false);
+      // alumnoService.actualizarPerfil(
+      //  firstName: firstNameController.text,
+      //  lastName: lastNameController.text,
+      //  email: emailController.text,
+      //  mobile: mobileController.text,
+      //  address: addressController.text,
+      //);
+    }
   }
 
   obtenerProfesor() async {
@@ -37,6 +69,16 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
     obtenerEstudiantes();
   }
 
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    mobileController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
   double positiontop = 0;
   Icon icono = const Icon(Icons.keyboard_double_arrow_down);
   @override
@@ -50,6 +92,22 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Profile'),
+        actions: [
+          !teacherService.editProfile
+              ? IconButton(
+                  onPressed: () {
+                    teacherService.isEditable();
+                    print(teacherService.editProfile);
+                  },
+                  icon: Icon(Icons.edit))
+              : IconButton(
+                  onPressed: () {
+                    actualizarPerfil();
+                    teacherService.isEditable();
+                    print(teacherService.editProfile);
+                  },
+                  icon: Icon(Icons.done))
+        ],
         backgroundColor: Colors.blueGrey[800],
       ),
       body: Stack(children: [
@@ -139,26 +197,38 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, right: 10, left: 10),
-                            child: TextField(
-                              readOnly: true,
-                              controller: TextEditingController()
-                                ..text = !profesor.isEmpty
-                                    ? profesor[0].firstname.toString() +
-                                        ' ' +
-                                        profesor[0].surname.toString()
-                                    : 'Sin datos',
-                              maxLines: 1,
-                              decoration: const InputDecoration(
-                                  disabledBorder: OutlineInputBorder(),
-                                  enabled: false,
-                                  label: Text('Nombre Completo',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                          color: Color.fromARGB(
-                                              255, 68, 89, 99)))),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    readOnly: teacherService.editProfile
+                                        ? false
+                                        : true,
+                                    controller: firstNameController,
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                        disabledBorder: OutlineInputBorder(),
+                                        label: Text('Nombre')),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    readOnly: teacherService.editProfile
+                                        ? false
+                                        : true,
+                                    controller: lastNameController,
+                                    maxLines: 1,
+                                    decoration: const InputDecoration(
+                                        disabledBorder: OutlineInputBorder(),
+                                        label: Text('Apellidos',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                color: Colors.blueGrey))),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -170,19 +240,16 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.50,
                                 child: TextField(
-                                    readOnly: true,
-                                    controller: TextEditingController()
-                                      ..text = !profesor.isEmpty
-                                          ? profesor[0].mobile.toString()
-                                          : 'Sin datos',
+                                    readOnly: teacherService.editProfile
+                                        ? false
+                                        : true,
+                                    controller: mobileController,
                                     maxLines: 1,
                                     decoration: const InputDecoration(
                                         disabledBorder: OutlineInputBorder(),
-                                        enabled: false,
                                         prefixIcon: Icon(
                                           Icons.phone,
-                                          color:
-                                              Color.fromARGB(255, 68, 89, 99),
+                                          color: Colors.blueGrey,
                                         ))),
                               ),
                               SizedBox(
@@ -214,18 +281,15 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                             padding: const EdgeInsets.only(
                                 top: 5, right: 10, left: 10),
                             child: TextField(
-                              readOnly: true,
-                              controller: TextEditingController()
-                                ..text = !profesor.isEmpty
-                                    ? profesor[0].address.toString()
-                                    : 'Sin datos',
+                              readOnly:
+                                  teacherService.editProfile ? false : true,
+                              controller: addressController,
                               maxLines: 1,
                               decoration: const InputDecoration(
                                   disabledBorder: OutlineInputBorder(),
-                                  enabled: false,
                                   prefixIcon: Icon(
                                     Icons.home,
-                                    color: Color.fromARGB(255, 68, 89, 99),
+                                    color: Colors.blueGrey,
                                   )),
                             ),
                           )
