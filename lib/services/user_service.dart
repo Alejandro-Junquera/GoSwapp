@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/models.dart';
 import 'services.dart';
@@ -12,6 +13,16 @@ class UserService extends ChangeNotifier {
   final List<TareasDataUser> misTareas = [];
 
   File? newPictureFile;
+  bool editProfile = false;
+
+  isEditable() {
+    if (editProfile == false) {
+      editProfile = true;
+    } else {
+      editProfile = false;
+    }
+    notifyListeners();
+  }
 
   obtenerTareasUsuario() async {
     misTareas.clear();
@@ -138,5 +149,38 @@ class UserService extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return decodedResp;
+  }
+
+  actualizarUsuario(String firstname, String surname, String email,
+      String mobile, String address) async {
+    String? token = await AuthService().readToken();
+    String? id = await AuthService().readId();
+    print(id);
+    final Map<String, dynamic> actualizarUsuario = {
+      'firstname': firstname,
+      'surname': surname,
+      'email': email,
+      'mobile': mobile,
+      'address': address
+    };
+    final url = Uri.http(_baseUrl, '/public/api/students/$id');
+    isLoading = true;
+    notifyListeners();
+    // ignore: unused_local_variable
+    final resp = await http.patch(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+      body: json.encode(actualizarUsuario),
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(decodedResp);
+
+    isLoading = false;
+    notifyListeners();
+    return null;
   }
 }

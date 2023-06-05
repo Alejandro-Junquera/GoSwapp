@@ -40,16 +40,15 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
         originalPerfil!.email != emailController.text ||
         originalPerfil!.mobile != mobileController.text ||
         originalPerfil!.address != addressController.text) {
-      // Aquí se debe llamar a la función para actualizar el perfil con los nuevos valores
-      // Por ejemplo:
-      // final alumnoService = Provider.of<AlumnoService>(context, listen: false);
-      // alumnoService.actualizarPerfil(
-      //  firstName: firstNameController.text,
-      //  lastName: lastNameController.text,
-      //  email: emailController.text,
-      //  mobile: mobileController.text,
-      //  address: addressController.text,
-      //);
+      final teacherService =
+          Provider.of<TeacherService>(context, listen: false);
+      teacherService.actualizarProfesor(
+        firstNameController.text,
+        lastNameController.text,
+        emailController.text,
+        mobileController.text,
+        addressController.text,
+      );
     }
   }
 

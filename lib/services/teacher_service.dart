@@ -295,4 +295,37 @@ class TeacherService extends ChangeNotifier {
     notifyListeners();
     return null;
   }
+
+  actualizarProfesor(String firstname, String surname, String email,
+      String mobile, String address) async {
+    String? token = await AuthService().readToken();
+    String? id = await AuthService().readId();
+    print(id);
+    final Map<String, dynamic> actualizarProfesor = {
+      'firstname': firstname,
+      'surname': surname,
+      'email': email,
+      'mobile': mobile,
+      'address': address
+    };
+    final url = Uri.http(_baseUrl, '/public/api/students/$id');
+    isLoading = true;
+    notifyListeners();
+    // ignore: unused_local_variable
+    final resp = await http.patch(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+      body: json.encode(actualizarProfesor),
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(decodedResp);
+
+    isLoading = false;
+    notifyListeners();
+    return null;
+  }
 }

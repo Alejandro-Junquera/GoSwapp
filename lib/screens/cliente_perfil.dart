@@ -11,9 +11,42 @@ class ClientePerfilScreen extends StatefulWidget {
 
 class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
   Map<String, dynamic>? perfil;
+  Map<String, dynamic>? originalPerfil;
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   obtenerPerfil() async {
     final userService = Provider.of<UserService>(context, listen: false);
     perfil = await userService.obtenerPerfilUser();
+
+    setState(() {
+      originalPerfil = perfil;
+      firstNameController.text = perfil!['Usuario']['firstname'] ?? '';
+      lastNameController.text = perfil!['Usuario']['surname'] ?? '';
+      emailController.text = perfil!['Usuario']['email'] ?? '';
+      mobileController.text = perfil!['Usuario']['mobile'] ?? '';
+      addressController.text = perfil!['Usuario']['address'] ?? '';
+    });
+  }
+
+  void actualizarPerfil() {
+    // Verificar si hubo cambios
+    if (originalPerfil!['Usuario']['firstname'] != firstNameController.text ||
+        originalPerfil!['Usuario']['surname'] != lastNameController.text ||
+        originalPerfil!['Usuario']['email'] != emailController.text ||
+        originalPerfil!['Usuario']['mobile'] != mobileController.text ||
+        originalPerfil!['Usuario']['address'] != addressController.text) {
+      final userService = Provider.of<UserService>(context, listen: false);
+      userService.actualizarUsuario(
+        firstNameController.text,
+        lastNameController.text,
+        emailController.text,
+        mobileController.text,
+        addressController.text,
+      );
+    }
   }
 
   @override
@@ -29,6 +62,16 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
   }
 
   @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    mobileController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
     if (userService.isLoading)
@@ -40,6 +83,20 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
         backgroundColor: Colors.blueGrey[800],
         centerTitle: true,
         title: const Text("Perfil"),
+        actions: [
+          !userService.editProfile
+              ? IconButton(
+                  onPressed: () {
+                    userService.isEditable();
+                  },
+                  icon: Icon(Icons.edit))
+              : IconButton(
+                  onPressed: () {
+                    actualizarPerfil();
+                    userService.isEditable();
+                  },
+                  icon: Icon(Icons.done))
+        ],
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
@@ -76,19 +133,51 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: userService.editProfile ? false : true,
+                  controller: firstNameController,
+                  maxLines: 1,
+                  decoration: InputDecoration(
+                      disabledBorder: OutlineInputBorder(),
+                      label: Text('Nombre',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.blueGrey))),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  readOnly: userService.editProfile ? false : true,
+                  controller: lastNameController,
+                  maxLines: 1,
+                  decoration: const InputDecoration(
+                      disabledBorder: OutlineInputBorder(),
+                      label: Text('Apellidos',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.blueGrey))),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: TextField(
-            readOnly: true,
-            controller: TextEditingController()
-              ..text = perfil == null
-                  ? ''
-                  : perfil!['Usuario']['firstname'].toString() +
-                      ' ' +
-                      perfil!['Usuario']['surname'].toString(),
+            readOnly: userService.editProfile ? false : true,
+            controller: emailController,
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
-                enabled: false,
-                label: Text('Nombre Completo',
+                label: Text('Email',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -101,45 +190,11 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
-            readOnly: true,
-            controller: TextEditingController()
-              ..text =
-                  perfil == null ? '' : perfil!['Usuario']['email'].toString(),
-            maxLines: 1,
-            decoration: const InputDecoration(
-                disabledBorder: OutlineInputBorder(),
-                enabled: false,
-                label: Text('Email',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.blueGrey)),
-                prefixIcon: Icon(
-                  Icons.alternate_email,
-                  color: Colors.blueGrey,
-                )),
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-              readOnly: true,
-              controller: TextEditingController()
-                ..text = perfil == null
-                    ? ''
-                    : perfil!['Usuario']['mobile'].toString(),
+              readOnly: userService.editProfile ? false : true,
+              controller: mobileController,
               maxLines: 1,
               decoration: const InputDecoration(
                   disabledBorder: OutlineInputBorder(),
-                  label: Text('Telefono',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.blueGrey)),
-                  enabled: false,
                   prefixIcon: Icon(
                     Icons.phone,
                     color: Colors.blueGrey,
@@ -151,20 +206,11 @@ class _ClientePerfilScreenState extends State<ClientePerfilScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
-            readOnly: true,
-            controller: TextEditingController()
-              ..text = perfil == null
-                  ? ''
-                  : perfil!['Usuario']['address'].toString(),
+            readOnly: userService.editProfile ? false : true,
+            controller: addressController,
             maxLines: 1,
             decoration: const InputDecoration(
                 disabledBorder: OutlineInputBorder(),
-                enabled: false,
-                label: Text('Direccion',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.blueGrey)),
                 prefixIcon: Icon(
                   Icons.home,
                   color: Colors.blueGrey,
