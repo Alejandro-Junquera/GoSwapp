@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_aplicacion_ganadora/models/models.dart';
+import 'package:flutter_aplicacion_ganadora/screens/editar_profesor.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 
 class GestionarProfesoresPage extends StatefulWidget {
@@ -101,7 +102,14 @@ class _GestionarProfesoresPageState extends State<GestionarProfesoresPage> {
                     icon: Icons.delete,
                   ),
                   SlidableAction(
-                    onPressed: (context) {},
+                    onPressed: (context) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditarProfresorScreen(profesor: profesor),
+                          ));
+                    },
                     backgroundColor: Color.fromARGB(255, 27, 110, 177),
                     icon: Icons.edit,
                   ),

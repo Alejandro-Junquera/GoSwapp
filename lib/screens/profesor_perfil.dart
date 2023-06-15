@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/models/models.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 class ProfesorPerfilScreen extends StatefulWidget {
   const ProfesorPerfilScreen({super.key});
@@ -22,9 +23,11 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
   obtenerEstudiantes() async {
     final teacherService = Provider.of<TeacherService>(context, listen: false);
     await teacherService.estudiantesConTareasYBoscoins();
+    await teacherService.recuperarPerfil();
     setState(() {
       estudiantesProf = teacherService.estudiantesProf;
-      originalPerfil = PerfilP.fromJson(profesor![0].toJson());
+      profesor = teacherService.profesor;
+      originalPerfil = PerfilP.fromJson(profesor[0].toJson());
       firstNameController.text = profesor[0].firstname ?? '';
       lastNameController.text = profesor[0].surname ?? '';
       emailController.text = profesor[0].email ?? '';
@@ -33,7 +36,7 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
     });
   }
 
-  void actualizarPerfil() {
+  actualizarPerfil() async {
     // Verificar si hubo cambios
     if (originalPerfil!.firstname != firstNameController.text ||
         originalPerfil!.surname != lastNameController.text ||
@@ -42,14 +45,16 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
         originalPerfil!.address != addressController.text) {
       final teacherService =
           Provider.of<TeacherService>(context, listen: false);
-      teacherService.actualizarProfesor(
+      final resp = await teacherService.actualizarProfesor(
         firstNameController.text,
         lastNameController.text,
         emailController.text,
         mobileController.text,
         addressController.text,
       );
+      return resp;
     }
+    return -1;
   }
 
   obtenerProfesor() async {
@@ -100,10 +105,27 @@ class _ProfesorPerfilScreenState extends State<ProfesorPerfilScreen> {
                   },
                   icon: Icon(Icons.edit))
               : IconButton(
-                  onPressed: () {
-                    actualizarPerfil();
+                  onPressed: () async {
+                    if (await actualizarPerfil() == 1) {
+                      QuickAlert.show(
+                          context: context,
+                          barrierDismissible: false,
+                          type: QuickAlertType.success,
+                          title: 'Completado',
+                          confirmBtnColor: Colors.blueGrey,
+                          text: 'Profesor editado correctamente',
+                          showCancelBtn: false);
+                    } else if (await actualizarPerfil() == 0) {
+                      QuickAlert.show(
+                          context: context,
+                          barrierDismissible: false,
+                          type: QuickAlertType.warning,
+                          title: 'Cuidado',
+                          confirmBtnColor: Colors.blueGrey,
+                          text: 'Email duplicado',
+                          showCancelBtn: false);
+                    } else {}
                     teacherService.isEditable();
-                    print(teacherService.editProfile);
                   },
                   icon: Icon(Icons.done))
         ],

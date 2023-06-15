@@ -250,7 +250,7 @@ class TeacherService extends ChangeNotifier {
   recuperarPerfil() async {
     profesor.clear();
     String? token = await AuthService().readToken();
-    String? cicleId = await AuthService().readCicleId();
+    String? id = await AuthService().readId();
     final url = Uri.http(_baseUrl, '/public/api/teachers');
     isLoading = true;
     notifyListeners();
@@ -266,7 +266,7 @@ class TeacherService extends ChangeNotifier {
     var allProfesores = Profesores.fromJson(decodedResp);
 
     for (var i in allProfesores.profesores!) {
-      if (i.cicleId.toString() == cicleId) {
+      if (i.userId.toString() == id) {
         profesor.add(i);
       }
     }
@@ -308,7 +308,7 @@ class TeacherService extends ChangeNotifier {
       'mobile': mobile,
       'address': address
     };
-    final url = Uri.http(_baseUrl, '/public/api/students/$id');
+    final url = Uri.http(_baseUrl, '/public/api/teachers/$id');
     isLoading = true;
     notifyListeners();
     // ignore: unused_local_variable
@@ -322,10 +322,45 @@ class TeacherService extends ChangeNotifier {
       body: json.encode(actualizarProfesor),
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    print(decodedResp);
-
     isLoading = false;
     notifyListeners();
-    return null;
+    if (decodedResp['message'] == null) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  actualizarProfesorAdmin(String firstname, String surname, String email,
+      String mobile, String address, idProfesor) async {
+    String? token = await AuthService().readToken();
+    final Map<String, dynamic> actualizarProfesor = {
+      'firstname': firstname,
+      'surname': surname,
+      'email': email,
+      'mobile': mobile,
+      'address': address
+    };
+    final url = Uri.http(_baseUrl, '/public/api/teachers/$idProfesor');
+    isLoading = true;
+    notifyListeners();
+    // ignore: unused_local_variable
+    final resp = await http.patch(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        "Authorization": 'Bearer $token',
+      },
+      body: json.encode(actualizarProfesor),
+    );
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    isLoading = false;
+    notifyListeners();
+    if (decodedResp['message'] == null) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

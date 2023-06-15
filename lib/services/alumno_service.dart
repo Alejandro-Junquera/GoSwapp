@@ -139,10 +139,12 @@ class AlumnoService extends ChangeNotifier {
       body: json.encode(actualizarAlumno),
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    print(decodedResp);
-
     isLoading = false;
     notifyListeners();
-    return null;
+    if (decodedResp['message'] == null) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

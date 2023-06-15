@@ -163,7 +163,7 @@ class UserService extends ChangeNotifier {
       'mobile': mobile,
       'address': address
     };
-    final url = Uri.http(_baseUrl, '/public/api/students/$id');
+    final url = Uri.http(_baseUrl, '/public/api/users/$id');
     isLoading = true;
     notifyListeners();
     // ignore: unused_local_variable
@@ -177,10 +177,12 @@ class UserService extends ChangeNotifier {
       body: json.encode(actualizarUsuario),
     );
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-    print(decodedResp);
-
     isLoading = false;
     notifyListeners();
-    return null;
+    if (decodedResp['message'] == null) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

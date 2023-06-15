@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aplicacion_ganadora/models/models.dart';
 import 'package:flutter_aplicacion_ganadora/services/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 
 class AlumnoPerfilScreen extends StatefulWidget {
   const AlumnoPerfilScreen({super.key});
@@ -33,7 +34,7 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
     });
   }
 
-  void actualizarPerfil() {
+  actualizarPerfil() async {
     // Verificar si hubo cambios
     if (originalPerfil!.firstname != firstNameController.text ||
         originalPerfil!.surname != lastNameController.text ||
@@ -41,14 +42,16 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
         originalPerfil!.mobile != mobileController.text ||
         originalPerfil!.address != addressController.text) {
       final alumnoService = Provider.of<AlumnoService>(context, listen: false);
-      alumnoService.actualizarAlumno(
+      final resp = await alumnoService.actualizarAlumno(
         firstNameController.text,
         lastNameController.text,
         emailController.text,
         mobileController.text,
         addressController.text,
       );
+      return resp;
     }
+    return -1;
   }
 
   @override
@@ -86,92 +89,169 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
                   },
                   icon: Icon(Icons.edit))
               : IconButton(
-                  onPressed: () {
-                    actualizarPerfil();
+                  onPressed: () async {
+                    if (await actualizarPerfil() == 1) {
+                      QuickAlert.show(
+                          context: context,
+                          barrierDismissible: false,
+                          type: QuickAlertType.success,
+                          title: 'Completado',
+                          confirmBtnColor: Colors.blueGrey,
+                          text: 'Alumno editado correctamente',
+                          showCancelBtn: false);
+                    } else if (await actualizarPerfil() == 0) {
+                      QuickAlert.show(
+                          context: context,
+                          barrierDismissible: false,
+                          type: QuickAlertType.warning,
+                          title: 'Cuidado',
+                          confirmBtnColor: Colors.blueGrey,
+                          text: 'Email duplicado',
+                          showCancelBtn: false);
+                    } else {}
                     alumnoService.isEditable();
-                    print(alumnoService.editProfile);
                   },
                   icon: Icon(Icons.done))
         ],
       ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.blueGrey[200],
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15))),
-          height: MediaQuery.of(context).size.height * 0.35,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    './assets/images/iconoAlumno.png',
-                    width: 200,
-                    height: 200,
-                    alignment: Alignment.center,
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        './assets/images/Boscoin.png',
-                        width: 40,
-                        height: 40,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        perfil![0].boscoins != null
-                            ? perfil![0].boscoins.toString()
-                            : '0',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  readOnly: alumnoService.editProfile ? false : true,
-                  controller: firstNameController,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                      disabledBorder: OutlineInputBorder(),
-                      label: Text('Nombre')),
+      body: SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.blueGrey[200],
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15))),
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              Expanded(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      './assets/images/iconoAlumno.png',
+                      width: 200,
+                      height: 200,
+                      alignment: Alignment.center,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          './assets/images/Boscoin.png',
+                          width: 40,
+                          height: 40,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          perfil![0].boscoins != null
+                              ? perfil![0].boscoins.toString()
+                              : '0',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    readOnly: alumnoService.editProfile ? false : true,
+                    controller: firstNameController,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        disabledBorder: OutlineInputBorder(),
+                        label: Text('Nombre')),
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    readOnly: alumnoService.editProfile ? false : true,
+                    controller: lastNameController,
+                    maxLines: 1,
+                    decoration: const InputDecoration(
+                        disabledBorder: OutlineInputBorder(),
+                        label: Text('Apellidos',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.blueGrey))),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              readOnly: alumnoService.editProfile ? false : true,
+              controller: emailController,
+              maxLines: 1,
+              decoration: const InputDecoration(
+                  disabledBorder: OutlineInputBorder(),
+                  label: Text('Email',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.blueGrey))),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.50,
                 child: TextField(
-                  readOnly: alumnoService.editProfile ? false : true,
-                  controller: lastNameController,
+                    readOnly: alumnoService.editProfile ? false : true,
+                    controller: mobileController,
+                    maxLines: 1,
+                    decoration: const InputDecoration(
+                        disabledBorder: OutlineInputBorder(),
+                        prefixIcon: Icon(
+                          Icons.phone,
+                          color: Colors.blueGrey,
+                        ))),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.40,
+                child: TextField(
+                  readOnly: true,
+                  controller: TextEditingController()
+                    ..text = perfil![0].cicleName != null
+                        ? perfil![0].cicleName.toString()
+                        : '',
                   maxLines: 1,
                   decoration: const InputDecoration(
                       disabledBorder: OutlineInputBorder(),
-                      label: Text('Apellidos',
+                      enabled: false,
+                      label: Text('Curso',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -180,83 +260,25 @@ class _AlumnoPerfilScreenState extends State<AlumnoPerfilScreen> {
               ),
             ],
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            readOnly: alumnoService.editProfile ? false : true,
-            controller: emailController,
-            maxLines: 1,
-            decoration: const InputDecoration(
-                disabledBorder: OutlineInputBorder(),
-                label: Text('Email',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.blueGrey))),
+          const SizedBox(
+            height: 10,
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.50,
-              child: TextField(
-                  readOnly: alumnoService.editProfile ? false : true,
-                  controller: mobileController,
-                  maxLines: 1,
-                  decoration: const InputDecoration(
-                      disabledBorder: OutlineInputBorder(),
-                      prefixIcon: Icon(
-                        Icons.phone,
-                        color: Colors.blueGrey,
-                      ))),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              readOnly: alumnoService.editProfile ? false : true,
+              controller: addressController,
+              maxLines: 1,
+              decoration: const InputDecoration(
+                  disabledBorder: OutlineInputBorder(),
+                  prefixIcon: Icon(
+                    Icons.home,
+                    color: Colors.blueGrey,
+                  )),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.40,
-              child: TextField(
-                readOnly: true,
-                controller: TextEditingController()
-                  ..text = perfil![0].cicleName != null
-                      ? perfil![0].cicleName.toString()
-                      : '',
-                maxLines: 1,
-                decoration: const InputDecoration(
-                    disabledBorder: OutlineInputBorder(),
-                    enabled: false,
-                    label: Text('Curso',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.blueGrey))),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            readOnly: alumnoService.editProfile ? false : true,
-            controller: addressController,
-            maxLines: 1,
-            decoration: const InputDecoration(
-                disabledBorder: OutlineInputBorder(),
-                prefixIcon: Icon(
-                  Icons.home,
-                  color: Colors.blueGrey,
-                )),
-          ),
-        )
-      ]),
+          )
+        ]),
+      ),
     );
   }
 }
